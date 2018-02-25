@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Popular Movies</string>
+
+    <!-- Main menu -->
+    <string name="action_sort_by_most_popular">Sort by most popular</string>
+    <string name="action_sort_by_highest_rated">Sort by highest rated</string>
 </resources>
