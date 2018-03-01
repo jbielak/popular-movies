@@ -10,7 +10,7 @@ import java.util.Date;
  * Created by Justyna on 2018-02-27.
  */
 
-public class Movie implements Serializable {
+public class Movie implements Parcelable {
 
     private long id;
     private String title;
@@ -33,6 +33,28 @@ public class Movie implements Serializable {
         this.popularity = popularity;
         this.overview = overview;
     }
+
+    protected Movie(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        releaseDate = new Date(in.readLong());
+        posterPath = in.readString();
+        voteAverage = in.readDouble();
+        popularity = in.readDouble();
+        overview = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -88,5 +110,21 @@ public class Movie implements Serializable {
 
     public void setOverview(String overview) {
         this.overview = overview;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(this.id);
+        parcel.writeString(this.title);
+        parcel.writeLong(this.releaseDate.getTime());
+        parcel.writeString(this.posterPath);
+        parcel.writeDouble(this.voteAverage);
+        parcel.writeDouble(this.popularity);
+        parcel.writeString(this.overview);
     }
 }
