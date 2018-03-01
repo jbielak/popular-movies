@@ -34,7 +34,7 @@ public abstract class PathProvider {
     public static URL getPosterUrl(String posterPath) {
         Uri builtUri = Uri.parse(POSTER_BASE_URL).buildUpon()
                 .appendPath(POSTER_SIZE)
-                .appendPath(posterPath)
+                .appendEncodedPath(posterPath)
                 .build();
         URL url = null;
         try {
