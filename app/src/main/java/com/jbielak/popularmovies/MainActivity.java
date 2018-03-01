@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         NetworkUtils.getInstance(getApplicationContext());
 
         if (NetworkUtils.isOnline(getApplicationContext())) {
-            getMovies(SortType.RATING);
+            getMovies(SortType.POPULAR);
         } else {
             Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT)
                     .show();
@@ -66,10 +66,10 @@ public class MainActivity extends AppCompatActivity {
         int clickedItemId = item.getItemId();
 
         if (clickedItemId == R.id.action_sort_by_most_popular) {
-            //TODO: Implement sorting films by most popular
+            getMovies(SortType.POPULAR);
         }
         if (clickedItemId == R.id.action_sort_by_most_highest_rated) {
-            //TODO: Implement sorting films by highest rated
+            getMovies(SortType.RATING);
         }
         return false;
     }
