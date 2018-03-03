@@ -32,7 +32,7 @@ public class MovieDeserializer {
     private static final String POPULARITY = "popularity";
     private static final String OVERVIEW = "overview";
 
-    public static List<Movie> deserializeMovies (JSONObject json) {
+    public static List<Movie> deserializeMovies(JSONObject json) {
         List<Movie> movies = new ArrayList<>();
         try {
             JSONArray moviesJson = json.getJSONArray(RESULTS);
@@ -48,18 +48,16 @@ public class MovieDeserializer {
     private static Movie getMovie(JSONObject movieJson) {
         Movie movie = null;
         if (movieJson != null) {
-            try {
-                movie = new Movie(
-                        movieJson.getLong(ID),
-                        movieJson.getString(TITLE),
-                        getDate(movieJson.getString(RELEASE_DATE)),
-                        movieJson.getString(POSTER_PATH),
-                        movieJson.getDouble(VOTE_AVERAGE),
-                        movieJson.getDouble(POPULARITY),
-                        movieJson.getString(OVERVIEW));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+
+            movie = new Movie(
+                    movieJson.optLong(ID),
+                    movieJson.optString(TITLE),
+                    getDate(movieJson.optString(RELEASE_DATE)),
+                    movieJson.optString(POSTER_PATH),
+                    movieJson.optDouble(VOTE_AVERAGE),
+                    movieJson.optDouble(POPULARITY),
+                    movieJson.optString(OVERVIEW));
+
         }
         return movie;
     }
