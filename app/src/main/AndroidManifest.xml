@@ -3,7 +3,7 @@
     package="com.jbielak.popularmovies"
     android:installLocation="preferExternal">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".DetailActivity"
+            android:label="@string/move_detail_activity_label"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>
