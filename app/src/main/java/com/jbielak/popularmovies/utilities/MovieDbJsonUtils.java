@@ -15,11 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by Justyna on 2018-02-27.
- */
-
-public class MovieDeserializer {
+public class MovieDbJsonUtils {
 
     private static final String RESULTS = "results";
     private static final String ID = "id";
@@ -30,12 +26,13 @@ public class MovieDeserializer {
     private static final String POPULARITY = "popularity";
     private static final String OVERVIEW = "overview";
 
-    public static List<Movie> deserializeMovies(JSONObject json) {
+    public static List<Movie> getMovies(String moviesJsonStr) throws JSONException{
+        JSONObject moviesJson = new JSONObject(moviesJsonStr);
         List<Movie> movies = new ArrayList<>();
         try {
-            JSONArray moviesJson = json.getJSONArray(RESULTS);
-            for (int i = 0; i < moviesJson.length(); i++) {
-                movies.add(getMovie(moviesJson.getJSONObject(i)));
+            JSONArray moviesJsonArray = moviesJson.getJSONArray(RESULTS);
+            for (int i = 0; i < moviesJsonArray.length(); i++) {
+                movies.add(getMovie(moviesJsonArray.getJSONObject(i)));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -59,7 +56,4 @@ public class MovieDeserializer {
         }
         return movie;
     }
-
-
-
 }

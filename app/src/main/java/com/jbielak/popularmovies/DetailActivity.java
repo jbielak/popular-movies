@@ -3,18 +3,14 @@ package com.jbielak.popularmovies;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.utilities.DateUtils;
-import com.jbielak.popularmovies.utilities.PathProvider;
+import com.jbielak.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
 
             mTitleTextView.setText(mMovie.getTitle());
             Picasso.with(this)
-                    .load(PathProvider.getPosterUrl(mMovie.getPosterPath()).toString())
+                    .load(NetworkUtils.buildPosterUrl(mMovie.getPosterPath()).toString())
                     .into(mPosterImageView);
             mReleaseDateTextView.setText(
                     DateUtils.getFriendlyDateString(mMovie.getReleaseDate()));

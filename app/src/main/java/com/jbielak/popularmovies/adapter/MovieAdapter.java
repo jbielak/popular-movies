@@ -11,14 +11,10 @@ import android.widget.ImageView;
 import com.jbielak.popularmovies.DetailActivity;
 import com.jbielak.popularmovies.R;
 import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.utilities.PathProvider;
+import com.jbielak.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-/**
- * Created by Justyna on 2018-02-28.
- */
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
@@ -27,9 +23,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     private List<Movie> movies;
     private Context context;
 
-    public MovieAdapter(Context context, List<Movie> movies) {
+    public MovieAdapter(Context context) {
         this.context = context;
-        this.movies = movies;
+        //this.movies = movies;
     }
 
     @Override
@@ -43,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         final Movie movie = movies.get(position);
         Picasso.with(context)
-                .load(PathProvider.getPosterUrl(movie.getPosterPath()).toString())
+                .load(NetworkUtils.buildPosterUrl(movie.getPosterPath()).toString())
                 .into(holder.posterImageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -58,6 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
+        if (null == movies) return 0;
         return movies.size();
     }
 
@@ -68,6 +65,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             super(itemView);
             posterImageView = itemView.findViewById(R.id.image_view_poster);
         }
+    }
 
+    public void setMovies(List<Movie> movies) {
+        this.movies = movies;
+        notifyDataSetChanged();
     }
 }
