@@ -21,8 +21,6 @@ import java.util.Locale;
 
 public class MovieDeserializer {
 
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-
     private static final String RESULTS = "results";
     private static final String ID = "id";
     private static final String TITLE = "title";
@@ -52,7 +50,7 @@ public class MovieDeserializer {
             movie = new Movie(
                     movieJson.optLong(ID),
                     movieJson.optString(TITLE),
-                    getDate(movieJson.optString(RELEASE_DATE)),
+                    DateUtils.getDate(movieJson.optString(RELEASE_DATE)),
                     movieJson.optString(POSTER_PATH),
                     movieJson.optDouble(VOTE_AVERAGE),
                     movieJson.optDouble(POPULARITY),
@@ -62,15 +60,6 @@ public class MovieDeserializer {
         return movie;
     }
 
-    private static Date getDate(String date) {
-        Date parsedDate = null;
-        DateFormat format = new SimpleDateFormat(DATE_FORMAT, Locale.ENGLISH);
-        try {
-            parsedDate = format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return parsedDate;
-    }
+
 
 }
