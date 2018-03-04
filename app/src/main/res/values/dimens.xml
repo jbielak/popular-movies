@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Movies List -->
+    <dimen name="error_display_padding">14dp</dimen>
+    <dimen name="error_text_size">20sp</dimen>
+    <dimen name="page_loading_indicator">40dp</dimen>
+
     <!-- Movie Details -->
     <dimen name="movie_detail_title_text">45sp</dimen>
     <dimen name="movie_detail_title_padding">15dp</dimen>

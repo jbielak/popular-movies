@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
@@ -28,7 +30,13 @@ public class MainActivity extends AppCompatActivity {
     private static final SortType DEFAULT_SORT_TYPE = SortType.POPULAR;
 
     @BindView(R.id.recycler_view_movies)
-     RecyclerView mMoviesRecyclerView;
+    RecyclerView mMoviesRecyclerView;
+
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
+
+    @BindView(R.id.tv_error_message_display)
+    TextView mErrorMessageTextView;
 
     private MovieAdapter mMovieAdapter;
 
@@ -46,16 +54,28 @@ public class MainActivity extends AppCompatActivity {
         mMovieAdapter = new MovieAdapter(this);
         mMoviesRecyclerView.setAdapter(mMovieAdapter);
 
-        if (NetworkUtils.isOnline(getApplicationContext())) {
-            loadMoviesData(DEFAULT_SORT_TYPE);
-        } else {
-            Toast.makeText(this, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT)
-                    .show();
-        }
+        loadMoviesData(DEFAULT_SORT_TYPE);
     }
 
     private void loadMoviesData(SortType sortType) {
-        new FetchMoviesTask().execute(sortType.getValue());
+        showMoviesDataView();
+
+        if (NetworkUtils.isOnline(getApplicationContext())) {
+            new FetchMoviesTask().execute(sortType.getValue());
+        } else {
+            mErrorMessageTextView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void showMoviesDataView() {
+        mErrorMessageTextView.setVisibility(View.GONE);
+        mMoviesRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showErrorMessage() {
+        mMoviesRecyclerView.setVisibility(View.GONE);
+        mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -82,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -112,8 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Movie> movies) {
+            mLoadingIndicator.setVisibility(View.GONE);
             if (movies != null) {
+                showMoviesDataView();
                 mMovieAdapter.setMovies(movies);
+            } else {
+                showErrorMessage();
             }
         }
     }
