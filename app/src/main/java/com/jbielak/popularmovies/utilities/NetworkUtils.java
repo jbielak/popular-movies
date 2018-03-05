@@ -5,13 +5,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import org.json.JSONObject;
+
+import com.jbielak.popularmovies.BuildConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +24,7 @@ public class NetworkUtils {
 
     private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie";
     private static final String API_KEY_PARAM = "api_key";
-    private static final String API_KEY = ""; // put your API key here
+    private static final String API_KEY = BuildConfig.MOVIES_DB_API_KEY; // put your API key here
 
     public static URL buildMoviesUrl(String sortType) {
         Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()

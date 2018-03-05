@@ -1,3 +1,13 @@
+Properties props = new Properties()
+File propsFile = file('api.properties')
+if (propsFile.exists()) {
+    props.load(propsFile.newDataInputStream())
+} else if (System.env.MY_API_KEY != null) {
+    props.setProperty("moviesDbApiKey", System.env.MOVIES_DB_API_KEY)
+} else {
+    throw new GradleException("Missing api.properties, check the api.properties")
+}
+
 apply plugin: 'com.android.application'
 
 android {
@@ -14,6 +24,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String", "MOVIES_DB_API_KEY", "\"${props.getProperty("moviesDbApiKey")}\""
         }
     }
 }
