@@ -1,6 +1,5 @@
 package com.jbielak.popularmovies;
 
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,15 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.utilities.MovieDbJsonUtils;
 import com.jbielak.popularmovies.utilities.NetworkUtils;
 import com.jbielak.popularmovies.utilities.SortType;
 
-import java.net.URL;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mErrorMessageTextView;
 
     private MovieAdapter mMovieAdapter;
+    private FetchMoviesTask fetchMoviesTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadMoviesData(SortType sortType) {
+        setupFetchMoviesTask();
         showMoviesDataView();
 
         if (NetworkUtils.isOnline(getApplicationContext())) {
-            new FetchMoviesTask().execute(sortType.getValue());
+            fetchMoviesTask.execute(sortType.getValue());
         } else {
             mErrorMessageTextView.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void showMoviesDataView() {
@@ -76,6 +73,27 @@ public class MainActivity extends AppCompatActivity {
     private void showErrorMessage() {
         mMoviesRecyclerView.setVisibility(View.GONE);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void setupFetchMoviesTask() {
+        fetchMoviesTask = new FetchMoviesTask();
+        fetchMoviesTask.setMoviesTaskCallback(new MoviesTaskCallback() {
+            @Override
+            public void onAsyncTaskPreExecute() {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAsyncTaskComplete(List<Movie> movies) {
+                mLoadingIndicator.setVisibility(View.GONE);
+                if (movies != null) {
+                    showMoviesDataView();
+                    mMovieAdapter.setMovies(movies);
+                } else {
+                    showErrorMessage();
+                }
+            }
+        });
     }
 
     @Override
@@ -96,51 +114,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
-    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String... params) {
-
-            /* If there's no sort type, there's nothing to look up. */
-            if (params.length == 0) {
-                return null;
-            }
-
-            String sortTypeStr = params[0];
-            URL moviesRequestUrl = NetworkUtils.buildMoviesUrl(sortTypeStr);
-
-            try {
-                String jsonMoviesResponse = NetworkUtils
-                        .getResponseFromHttpUrl(moviesRequestUrl);
-
-                List<Movie> moviesData = MovieDbJsonUtils
-                        .getMovies(jsonMoviesResponse);
-
-                return moviesData;
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            mLoadingIndicator.setVisibility(View.GONE);
-            if (movies != null) {
-                showMoviesDataView();
-                mMovieAdapter.setMovies(movies);
-            } else {
-                showErrorMessage();
-            }
-        }
-    }
-
 }
