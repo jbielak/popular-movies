@@ -50,7 +50,7 @@ public class DetailActivity extends AppCompatActivity {
                     .load(NetworkUtils.buildPosterUrl(mMovie.getPosterPath()).toString())
                     .into(mPosterImageView);
             mReleaseDateTextView.setText(
-                    DateUtils.getFriendlyDateString(mMovie.getReleaseDate()));
+                    DateUtils.getYearString(mMovie.getReleaseDate()));
             mVoteAverageTextView.setText(getString(R.string.vote_average, mMovie.getVoteAverage())
                     .replace(',', '.'));
             mOverviewTextView.setText(mMovie.getOverview());

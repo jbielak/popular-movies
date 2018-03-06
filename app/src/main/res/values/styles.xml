@@ -8,4 +8,26 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MovieTitleTextView">
+        <item name="android:background">@color/colorTitleBackground</item>
+        <item name="android:padding">@dimen/movie_detail_title_padding</item>
+        <item name="android:paddingBottom">@dimen/movie_detail_title_padding_bottom</item>
+        <item name="android:paddingTop">@dimen/movie_detail_title_padding_top</item>
+        <item name="android:textColor">@color/colorTitleText</item>
+        <item name="android:textSize">@dimen/movie_detail_title_text</item>
+    </style>
+
+    <style name="PosterDetailImageView">
+        <item name="android:layout_margin">@dimen/movie_detail_poster_margin</item>
+        <item name="android:layout_marginLeft">@dimen/movie_detail_poster_margin_left</item>
+        <item name="android:layout_marginStart">@dimen/movie_detail_poster_margin_left</item>
+        <item name="android:contentDescription">@string/poster_image_description</item>
+    </style>
+
+    <style name="ReleaseDateTextView">
+        <item name="android:layout_marginBottom">@dimen/movie_detail_margin</item>
+        <item name="android:layout_marginTop">@dimen/movie_detail_margin</item>
+        <item name="android:textSize">@dimen/movie_detail_release_date_text</item>
+    </style>
+
 </resources>

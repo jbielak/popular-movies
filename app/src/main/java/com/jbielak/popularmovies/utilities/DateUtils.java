@@ -51,7 +51,7 @@ public final class DateUtils {
      * @param date  Date object
      * @return Year
      */
-    private static String getYearString(Date date) {
+    public static String getYearString(Date date) {
         if (date != null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);

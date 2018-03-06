@@ -7,6 +7,7 @@
     <dimen name="page_loading_indicator">40dp</dimen>
 
     <!-- Movie Details -->
+    <dimen name="movie_detail_text_small">15sp</dimen>
     <dimen name="movie_detail_title_text">45sp</dimen>
     <dimen name="movie_detail_title_padding">15dp</dimen>
     <dimen name="movie_detail_title_padding_top">20dp</dimen>
@@ -19,8 +20,7 @@
     <dimen name="movie_detail_margin_left">20dp</dimen>
 
     <dimen name="movie_detail_release_date_text">30sp</dimen>
-    <dimen name="movie_detail_vote_average_text">15sp</dimen>
-    <dimen name="movie_detail_overview_text">15sp</dimen>
+
     <dimen name="movie_detail_overview_margin">10dp</dimen>
     <dimen name="movie_detail_overview_margin_top">20dp</dimen>
 </resources>
