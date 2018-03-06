@@ -25,7 +25,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     public MovieAdapter(Context context) {
         this.context = context;
-        //this.movies = movies;
     }
 
     @Override
@@ -40,6 +39,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         final Movie movie = movies.get(position);
         Picasso.with(context)
                 .load(NetworkUtils.buildPosterUrl(movie.getPosterPath()).toString())
+                .placeholder(R.drawable.ic_crop_original_black_48dp)
+                .error(R.drawable.ic_crop_original_black_48dp)
                 .into(holder.posterImageView);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
