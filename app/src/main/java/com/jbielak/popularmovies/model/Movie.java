@@ -3,6 +3,8 @@ package com.jbielak.popularmovies.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -14,17 +16,20 @@ public class Movie implements Parcelable {
 
     private long id;
     private String title;
+    @SerializedName("release_date")
     private Date releaseDate;
+    @SerializedName("poster_path")
     private String posterPath;
-    private double voteAverage;
-    private double popularity;
+    @SerializedName("vote_average")
+    private Double voteAverage;
+    private Double popularity;
     private String overview;
 
     public Movie() {
     }
 
-    public Movie(long id, String title, Date releaseDate, String posterPath, double voteAverage,
-                 double popularity, String overview) {
+    public Movie(long id, String title, Date releaseDate, String posterPath, Double voteAverage,
+                 Double popularity, String overview) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -88,19 +93,19 @@ public class Movie implements Parcelable {
         this.posterPath = posterPath;
     }
 
-    public double getVoteAverage() {
+    public Double getVoteAverage() {
         return voteAverage;
     }
 
-    public void setVoteAverage(double voteAverage) {
+    public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
     }
 
-    public double getPopularity() {
+    public Double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(double popularity) {
+    public void setPopularity(Double popularity) {
         this.popularity = popularity;
     }
 
@@ -121,7 +126,8 @@ public class Movie implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeLong(this.id);
         parcel.writeString(this.title);
-        parcel.writeLong(this.releaseDate.getTime());
+        parcel.writeLong((this.releaseDate != null) ? this.releaseDate.getTime()
+        : 0);
         parcel.writeString(this.posterPath);
         parcel.writeDouble(this.voteAverage);
         parcel.writeDouble(this.popularity);

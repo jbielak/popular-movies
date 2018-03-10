@@ -12,7 +12,8 @@ import android.widget.TextView;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.utilities.NetworkUtils;
+import com.jbielak.popularmovies.network.MoviesService;
+import com.jbielak.popularmovies.network.NetworkUtils;
 import com.jbielak.popularmovies.utilities.SortType;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mErrorMessageTextView;
 
     private MovieAdapter mMovieAdapter;
-    private FetchMoviesTask fetchMoviesTask;
+    private MoviesService moviesService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+
+        moviesService = new MoviesService();
+        setupFetchMoviesDataCallback();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
         mMoviesRecyclerView.setLayoutManager(gridLayoutManager);
@@ -55,45 +59,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadMoviesData(SortType sortType) {
-        setupFetchMoviesTask();
-        showMoviesDataView();
 
         if (NetworkUtils.isOnline(getApplicationContext())) {
-            fetchMoviesTask.execute(sortType.getValue());
+            moviesService.getMovies(sortType);
         } else {
-            mErrorMessageTextView.setVisibility(View.VISIBLE);
+            showErrorMessage();
         }
     }
 
+    private void setupFetchMoviesDataCallback() {
+        moviesService.setFetchDataListener(new FetchDataListener<List<Movie>>() {
+            @Override
+            public void onPreExecute() {
+                mLoadingIndicator.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onResponse(List<Movie> movies) {
+                mMovieAdapter.setMovies(movies);
+                showMoviesDataView();
+            }
+
+            @Override
+            public void onError() {
+                showErrorMessage();
+            }
+        });
+    }
+
     private void showMoviesDataView() {
+        mLoadingIndicator.setVisibility(View.GONE);
         mErrorMessageTextView.setVisibility(View.GONE);
         mMoviesRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
+        mLoadingIndicator.setVisibility(View.GONE);
         mMoviesRecyclerView.setVisibility(View.GONE);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
-    }
-
-    private void setupFetchMoviesTask() {
-        fetchMoviesTask = new FetchMoviesTask();
-        fetchMoviesTask.setMoviesTaskCallback(new MoviesTaskCallback() {
-            @Override
-            public void onAsyncTaskPreExecute() {
-                mLoadingIndicator.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAsyncTaskComplete(List<Movie> movies) {
-                mLoadingIndicator.setVisibility(View.GONE);
-                if (movies != null) {
-                    showMoviesDataView();
-                    mMovieAdapter.setMovies(movies);
-                } else {
-                    showErrorMessage();
-                }
-            }
-        });
     }
 
     @Override

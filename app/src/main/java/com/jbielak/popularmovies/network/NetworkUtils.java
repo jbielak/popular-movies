@@ -1,4 +1,4 @@
-package com.jbielak.popularmovies.utilities;
+package com.jbielak.popularmovies.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -7,24 +7,20 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.jbielak.popularmovies.BuildConfig;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Scanner;
 
-public class NetworkUtils {
+public abstract class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185";
 
-    private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie";
+    public static final String BASE_URL ="http://api.themoviedb.org/3/";
+    private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PARAM = "api_key";
-    private static final String API_KEY = BuildConfig.MOVIES_DB_API_KEY; // put your API key here
+    public static final String API_KEY = BuildConfig.MOVIES_DB_API_KEY; // put your API key here
 
     public static URL buildMoviesUrl(String sortType) {
         Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
@@ -56,26 +52,6 @@ public class NetworkUtils {
         } catch(MalformedURLException e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        try {
-            InputStream in = urlConnection.getInputStream();
-
-            Scanner scanner = new Scanner(in);
-            scanner.useDelimiter("\\A");
-
-            boolean hasInput = scanner.hasNext();
-            String response = null;
-            if (hasInput) {
-                response = scanner.next();
-            }
-            scanner.close();
-            return response;
-        } finally {
-            urlConnection.disconnect();
         }
     }
 
