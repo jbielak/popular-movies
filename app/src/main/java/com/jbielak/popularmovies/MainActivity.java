@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupFetchMoviesDataCallback() {
-        moviesService.setFetchDataListener(new FetchDataListener<List<Movie>>() {
+        moviesService.setFetchMoviesDataListener(new FetchDataListener<List<Movie>>() {
             @Override
             public void onPreExecute() {
                 mLoadingIndicator.setVisibility(View.VISIBLE);
