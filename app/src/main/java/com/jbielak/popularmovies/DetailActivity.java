@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.model.Movie;
+import com.jbielak.popularmovies.network.NetworkUtils;
 import com.jbielak.popularmovies.utilities.DateUtils;
-import com.jbielak.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -49,8 +49,9 @@ public class DetailActivity extends AppCompatActivity {
             Picasso.with(this)
                     .load(NetworkUtils.buildPosterUrl(mMovie.getPosterPath()).toString())
                     .into(mPosterImageView);
-            mReleaseDateTextView.setText(
-                    DateUtils.getYearString(mMovie.getReleaseDate()));
+            String date = DateUtils.getYearString(mMovie.getReleaseDate());
+            mReleaseDateTextView.setText(date == null
+                    ? getString(R.string.unknown_release_date) : date);
             mVoteAverageTextView.setText(getString(R.string.vote_average, mMovie.getVoteAverage())
                     .replace(',', '.'));
             mOverviewTextView.setText(mMovie.getOverview());

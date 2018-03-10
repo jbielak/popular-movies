@@ -10,7 +10,7 @@ import java.util.Locale;
 /**
  * Class for handling date conversions that are useful for  Popular Movies.
  */
-public final class DateUtils {
+public abstract class DateUtils {
 
     private static final String INCOMING_DATE_FORMAT = "yyyy-MM-dd";
     private static final String DISPLAY_DATE_FORMAT = "dd-MM-yyyy";
@@ -40,8 +40,11 @@ public final class DateUtils {
      * @return A user friendly representation of date, eg "10-09-2014"
      */
     public static String getFriendlyDateString(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMAT);
-        return dateFormat.format(date);
+        if (date != null) {
+            DateFormat dateFormat = new SimpleDateFormat(DISPLAY_DATE_FORMAT);
+            return dateFormat.format(date);
+        }
+        return null;
     }
 
 

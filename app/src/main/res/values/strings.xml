@@ -18,4 +18,5 @@
     <!-- Movie details view -->
     <string name="move_detail_activity_label">Movie Detail</string>
     <string name="vote_average">%.2f/10</string>
+    <string name="unknown_release_date">Date unknown</string>
 </resources>
