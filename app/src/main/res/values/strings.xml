@@ -24,4 +24,7 @@
     <string name="trailers_fetching_error">
         Problem with getting trailers. Please try again later.
     </string>
+    <string name="trailer_play_error">
+        Problem with playing trailer. Please try again later.
+    </string>
 </resources>

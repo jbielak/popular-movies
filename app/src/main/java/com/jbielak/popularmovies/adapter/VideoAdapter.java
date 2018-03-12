@@ -1,15 +1,18 @@
 package com.jbielak.popularmovies.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jbielak.popularmovies.R;
-import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.model.Video;
+import com.jbielak.popularmovies.network.NetworkUtils;
 
 import java.util.List;
 
@@ -36,6 +39,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.trailerNameTextView.setText(trailers.get(position).getName());
+
+        final Video trailer = trailers.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri trailerUri = NetworkUtils.buildVideoUri(trailer.getKey());
+                if (trailerUri != null) {
+                    playTrailer(trailerUri);
+                }
+                else {
+                    Toast.makeText(context, R.string.trailer_play_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -56,5 +73,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
     public void setTrailers(List<Video> trailers) {
         this.trailers = trailers;
         notifyDataSetChanged();
+    }
+
+    private void playTrailer(Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
     }
 }

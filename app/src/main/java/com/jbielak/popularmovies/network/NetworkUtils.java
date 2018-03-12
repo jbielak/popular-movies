@@ -22,6 +22,10 @@ public abstract class NetworkUtils {
     private static final String API_KEY_PARAM = "api_key";
     public static final String API_KEY = BuildConfig.MOVIES_DB_API_KEY; // put your API key here
 
+    private static final String YOUTUBE_BASE_URL = "https://www.youtube.com/";
+    private static final String YOUTUBE_WATCH_PATH = "watch";
+    private static final String YOUTUBE_VIDEO_KEY = "v";
+
     public static URL buildMoviesUrl(String sortType) {
         Uri moviesUri = Uri.parse(MOVIES_BASE_URL).buildUpon()
                 .appendPath(sortType)
@@ -53,6 +57,13 @@ public abstract class NetworkUtils {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Uri buildVideoUri(String movieId) {
+        return Uri.parse(YOUTUBE_BASE_URL).buildUpon()
+                .appendPath(YOUTUBE_WATCH_PATH)
+                .appendQueryParameter(YOUTUBE_VIDEO_KEY, movieId)
+                .build();
     }
 
     public static boolean isOnline(Context context) {
