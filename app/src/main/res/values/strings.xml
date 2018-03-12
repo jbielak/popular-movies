@@ -19,4 +19,9 @@
     <string name="move_detail_activity_label">Movie Detail</string>
     <string name="vote_average">%.2f/10</string>
     <string name="unknown_release_date">Date unknown</string>
+    <string name="play_image_description">Play</string>
+    <string name="trailers_list_label">Trailers:</string>
+    <string name="trailers_fetching_error">
+        Problem with getting trailers. Please try again later.
+    </string>
 </resources>

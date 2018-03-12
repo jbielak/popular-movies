@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.jbielak.popularmovies.DetailActivity">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,18 +16,18 @@
 
             <TextView
                 android:id="@+id/text_view_title"
+                style="@style/MovieTitleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/MovieTitleTextView"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/image_view_poster"
+                style="@style/PosterDetailImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/PosterDetailImageView"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_title"/>
+                app:layout_constraintTop_toBottomOf="@id/text_view_title" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -41,9 +41,9 @@
 
                 <TextView
                     android:id="@+id/text_view_release_date"
+                    style="@style/ReleaseDateTextView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/ReleaseDateTextView"/>
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/text_view_vote_average"
@@ -62,6 +62,39 @@
                 android:textSize="@dimen/movie_detail_text_small"
                 app:layout_constraintTop_toBottomOf="@id/image_view_poster" />
 
+            <RelativeLayout
+                android:id="@+id/rl_trailers_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/movie_detail_overview_margin"
+                android:paddingBottom="@dimen/trailers_section_padding_bottom"
+                app:layout_constraintTop_toBottomOf="@id/text_view_overview">
+
+                <View
+                    android:id="@+id/view_horizontal_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/separator_horizontal_line_height"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="@dimen/separator_horizontal_line_margin"
+                    android:background="@color/colorDarkGrey" />
+
+                <TextView
+                    android:id="@+id/text_view_trailers_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/view_horizontal_line"
+                    android:text="@string/trailers_list_label"
+                    android:textSize="@dimen/trailers_list_title_text_size" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_trailers"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/text_view_trailers_list"
+                    android:visibility="visible" />
+
+            </RelativeLayout>
+
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </android.support.constraint.ConstraintLayout>
