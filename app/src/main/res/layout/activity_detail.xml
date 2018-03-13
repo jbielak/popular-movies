@@ -92,6 +92,30 @@
                     android:layout_height="match_parent"
                     android:layout_below="@id/text_view_trailers_list"
                     android:visibility="visible" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_reviews_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/movie_detail_overview_margin"
+                android:paddingBottom="@dimen/trailers_section_padding_bottom"
+                app:layout_constraintTop_toBottomOf="@id/rl_trailers_section">
+
+                <TextView
+                    android:id="@+id/text_view_reviews_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/reviews_list_label"
+                    android:textSize="@dimen/reviews_list_title_text_size" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_reviews"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/text_view_reviews_list"
+                    android:visibility="visible" />
 
             </RelativeLayout>
 

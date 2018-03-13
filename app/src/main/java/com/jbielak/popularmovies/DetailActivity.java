@@ -13,8 +13,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
+import com.jbielak.popularmovies.adapter.ReviewAdapter;
 import com.jbielak.popularmovies.adapter.VideoAdapter;
 import com.jbielak.popularmovies.model.Movie;
+import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.Video;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
@@ -52,10 +54,19 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view_trailers)
     RecyclerView mTrailersRecyclerView;
 
+    @BindView(R.id.rl_reviews_section)
+    RelativeLayout mReviewsSectionRelativeLayout;
+
+    @BindView(R.id.recycler_view_reviews)
+    RecyclerView mReviewsRecyclerView;
+
+
     private MoviesService mMoviesService;
     private Movie mMovie;
     private List<Video> mTrailers;
     private VideoAdapter mVideoAdapter;
+    private List<Review> mReviews;
+    private ReviewAdapter mReviewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +76,12 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mMoviesService = new MoviesService();
-        setupFetchVideosDataCallback();
 
+        setupFetchVideosDataCallback();
         setupTrailersRecyclerView();
+
+        setupFetchReviewsDataCallback();
+        setupReviewsRecyclerView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (getIntent().hasExtra(MovieAdapter.EXTRA_MOVIE)) {
@@ -84,6 +98,7 @@ public class DetailActivity extends AppCompatActivity {
                     .replace(',', '.'));
             mOverviewTextView.setText(mMovie.getOverview());
             mMoviesService.getMovieVideos(String.valueOf(mMovie.getId()));
+            mMoviesService.getMovieReviews(String.valueOf(mMovie.getId()));
         }
     }
 
@@ -103,6 +118,18 @@ public class DetailActivity extends AppCompatActivity {
 
         mVideoAdapter = new VideoAdapter(this);
         mTrailersRecyclerView.setAdapter(mVideoAdapter);
+    }
+
+    private void setupReviewsRecyclerView() {
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mReviewsRecyclerView.setLayoutManager(linearLayoutManager);
+
+        mReviewsRecyclerView.addItemDecoration(new DividerItemDecoration(
+                mReviewsRecyclerView.getContext(),LinearLayoutManager.VERTICAL));
+
+        mReviewAdapter = new ReviewAdapter(this);
+        mReviewsRecyclerView.setAdapter(mReviewAdapter);
     }
 
     private void setupFetchVideosDataCallback() {
@@ -134,6 +161,35 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    private void setupFetchReviewsDataCallback() {
+        mMoviesService.setFetchReviewsDataListener(new FetchDataListener<List<Review>>() {
+            @Override
+            public void onPreExecute() {
+                setReviewsViewVisibility(View.GONE);
+            }
+
+            @Override
+            public void onResponse(List<Review> reviews) {
+                if (reviews != null ) {
+                    mReviews = reviews;
+                    if(mReviews.isEmpty()) {
+                        setReviewsViewVisibility(View.GONE);
+                    } else {
+                        mReviewAdapter.setReviews(mReviews);
+                        setReviewsViewVisibility(View.VISIBLE);
+                    }
+                }
+            }
+
+            @Override
+            public void onError() {
+                Toast.makeText(DetailActivity.this, R.string.reviews_fetching_error,
+                        Toast.LENGTH_SHORT).show();
+                setReviewsViewVisibility(View.GONE);
+            }
+        });
+    }
+
     private List<Video> getVideosByType(List<Video> videos, String type) {
         List<Video> filteredVideos = new ArrayList<>();
         if (videos != null && !videos.isEmpty() && type != null) {
@@ -149,6 +205,12 @@ public class DetailActivity extends AppCompatActivity {
     private void setTrailersViewVisibility(int visibility) {
         if (mTrailersSectionRelativeLayout != null) {
             mTrailersSectionRelativeLayout.setVisibility(visibility);
+        }
+    }
+
+    private void setReviewsViewVisibility(int visibility) {
+        if (mReviewsSectionRelativeLayout != null) {
+            mReviewsSectionRelativeLayout.setVisibility(visibility);
         }
     }
 }

@@ -34,4 +34,11 @@
     <dimen name="trailer_item_margin">15dp</dimen>
     <dimen name="trailer_name_text_size">14sp</dimen>
     <dimen name="trailer_item_height">30dp</dimen>
+
+    <!-- Reviews List -->
+    <dimen name="reviews_section_padding_bottom">10dp</dimen>
+    <dimen name="reviews_list_title_text_size">20sp</dimen>
+    <dimen name="review_author_text_size">12sp</dimen>
+    <dimen name="review_content_text_size">12sp</dimen>
+    <dimen name="review_item_margin">8dp</dimen>
 </resources>
