@@ -35,5 +35,8 @@
     <string name="reviews_fetching_error">
         Problem with getting reviews. Please try again later.
     </string>
+    <string name="review_open_error">
+        Problem with opening review. Please try again later.
+    </string>
 
 </resources>

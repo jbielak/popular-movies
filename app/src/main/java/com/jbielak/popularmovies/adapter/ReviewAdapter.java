@@ -1,14 +1,18 @@
 package com.jbielak.popularmovies.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jbielak.popularmovies.R;
 import com.jbielak.popularmovies.model.Review;
+import com.jbielak.popularmovies.network.NetworkUtils;
 
 import java.util.List;
 
@@ -41,6 +45,20 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             holder.reviewAuthorTextView.setText(reviews.get(position).getAuthor());
             holder.reviewContentTextView.setText(reviews.get(position).getContent());
         }
+
+        final Review review = reviews.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri reviewUri = Uri.parse(review.getUrl().toString());
+                if (reviewUri != null) {
+                    openReview(reviewUri);
+                }
+                else {
+                    Toast.makeText(context, R.string.review_open_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -64,5 +82,13 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
         notifyDataSetChanged();
+    }
+
+    private void openReview(Uri uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
     }
 }
