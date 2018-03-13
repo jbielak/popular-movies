@@ -5,6 +5,8 @@ import android.util.Log;
 import com.jbielak.popularmovies.FetchDataListener;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.model.MovieResponse;
+import com.jbielak.popularmovies.model.Review;
+import com.jbielak.popularmovies.model.ReviewResponse;
 import com.jbielak.popularmovies.model.Video;
 import com.jbielak.popularmovies.model.VideoResponse;
 import com.jbielak.popularmovies.utilities.SortType;
@@ -26,6 +28,7 @@ public class MoviesService {
     private MoviesApiInterface moviesApiInterface;
     private FetchDataListener<List<Movie>> fetchMoviesDataListener;
     private FetchDataListener<List<Video>> fetchVideosDataListener;
+    private FetchDataListener<List<Review>> fetchReviewsDataListener;
 
     public MoviesService() {
         moviesApiInterface = ApiClientGenerator.createClient(MoviesApiInterface.class,
@@ -92,11 +95,45 @@ public class MoviesService {
         });
     }
 
+    public void getMovieReviews(String movieId){
+        if(fetchReviewsDataListener != null) {
+            fetchReviewsDataListener.onPreExecute();
+        }
+
+        Call<ReviewResponse> call = moviesApiInterface.getMovieReviews(movieId, NetworkUtils.API_KEY);
+
+        call.enqueue(new Callback<ReviewResponse>() {
+            List<Review> reviews = null;
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                if (response.body() != null) {
+                    reviews = response.body().getResults();
+                    Log.d(TAG, "Number of reviews received: " + reviews.size());
+                }
+                if (fetchReviewsDataListener != null) {
+                    fetchReviewsDataListener.onResponse(reviews);
+                }
+
+            }
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable throwable) {
+                Log.e(TAG, throwable.toString());
+                if (fetchReviewsDataListener != null) {
+                    fetchReviewsDataListener.onError();
+                }
+            }
+        });
+    }
+
     public void setFetchMoviesDataListener(FetchDataListener<List<Movie>> fetchMoviesDataListener) {
         this.fetchMoviesDataListener = fetchMoviesDataListener;
     }
 
     public void setFetchVideosDataListener(FetchDataListener<List<Video>> fetchVideosDataListener) {
         this.fetchVideosDataListener = fetchVideosDataListener;
+    }
+
+    public void setFetchReviewsDataListener(FetchDataListener<List<Review>> fetchReviewsDataListener) {
+        this.fetchReviewsDataListener = fetchReviewsDataListener;
     }
 }
