@@ -4,6 +4,7 @@
     <!-- Main menu -->
     <string name="action_sort_by_most_popular">Sort by most popular</string>
     <string name="action_sort_by_highest_rated">Sort by highest rated</string>
+    <string name="action_favorites">Favorites</string>
 
     <!-- Network -->
     <string name="no_internet_connection">No Internet connection.</string>

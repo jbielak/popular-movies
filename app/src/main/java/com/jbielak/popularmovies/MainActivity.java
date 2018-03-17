@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
         if (clickedItemId == R.id.action_sort_by_most_highest_rated) {
             loadMoviesData(SortType.RATING);
         }
+        if (clickedItemId == R.id.action_favorites) {
+        }
         return false;
     }
 }
