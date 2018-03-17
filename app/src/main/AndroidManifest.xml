@@ -24,6 +24,12 @@
         <activity android:name=".DetailActivity"
             android:label="@string/move_detail_activity_label"
             android:parentActivityName=".MainActivity"></activity>
+
+        <provider
+            android:name=".data.MovieContentProvider"
+            android:authorities="com.jbielak.popularmovies"
+            android:exported="false"/>
+
     </application>
 
 </manifest>

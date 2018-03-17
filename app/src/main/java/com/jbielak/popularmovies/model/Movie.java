@@ -6,7 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Justyna on 2018-02-27.
@@ -24,12 +26,14 @@ public class Movie implements Parcelable {
     private Double voteAverage;
     private Double popularity;
     private String overview;
+    private List<Video> videos;
+    private List<Review> reviews;
 
     public Movie() {
     }
 
     public Movie(long id, String title, Date releaseDate, String posterPath, Double voteAverage,
-                 Double popularity, String overview) {
+                 Double popularity, String overview, List<Video> videos, List<Review> reviews) {
         this.id = id;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -37,6 +41,8 @@ public class Movie implements Parcelable {
         this.voteAverage = voteAverage;
         this.popularity = popularity;
         this.overview = overview;
+        this.videos = videos;
+        this.reviews = reviews;
     }
 
     protected Movie(Parcel in) {
@@ -47,6 +53,10 @@ public class Movie implements Parcelable {
         voteAverage = in.readDouble();
         popularity = in.readDouble();
         overview = in.readString();
+        videos = new ArrayList<>();
+        in.readTypedList(videos, Video.CREATOR);
+        reviews = new ArrayList<>();
+        in.readTypedList(reviews, Review.CREATOR);
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -117,6 +127,22 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -132,5 +158,7 @@ public class Movie implements Parcelable {
         parcel.writeDouble(this.voteAverage);
         parcel.writeDouble(this.popularity);
         parcel.writeString(this.overview);
+        parcel.writeTypedList(this.videos);
+        parcel.writeTypedList(this.reviews);
     }
 }
