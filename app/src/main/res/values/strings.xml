@@ -40,4 +40,9 @@
         Problem with opening review. Please try again later.
     </string>
 
+    <!-- Favorites -->
+    <string name="favorite_movies_no_favorite_movies_in_db_message">
+        You don\'t have favorite movies.
+    </string>
+
 </resources>

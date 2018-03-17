@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
+import com.jbielak.popularmovies.data.MoviesDbService;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieAdapter mMovieAdapter;
     private MoviesService moviesService;
+    private MoviesDbService moviesDbService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        moviesDbService = new MoviesDbService(getApplicationContext());
         moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
@@ -58,12 +61,21 @@ public class MainActivity extends AppCompatActivity {
         loadMoviesData(DEFAULT_SORT_TYPE);
     }
 
+    private void getMoviesFromDb() {
+        List<Movie> favoriteMovies = moviesDbService.getFavoriteMovies();
+        if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
+            mMovieAdapter.setMovies(favoriteMovies);
+        } else {
+            showErrorMessage(getString(R.string.favorite_movies_no_favorite_movies_in_db_message));
+        }
+    }
+
     private void loadMoviesData(SortType sortType) {
 
         if (NetworkUtils.isOnline(getApplicationContext())) {
             moviesService.getMovies(sortType);
         } else {
-            showErrorMessage();
+            showErrorMessage(getString(R.string.error_fetch_movies_message));
         }
     }
 
@@ -82,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError() {
-                showErrorMessage();
+                showErrorMessage(getString(R.string.error_fetch_movies_data));
             }
         });
     }
@@ -93,9 +105,10 @@ public class MainActivity extends AppCompatActivity {
         mMoviesRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    private void showErrorMessage() {
+    private void showErrorMessage(String message) {
         mLoadingIndicator.setVisibility(View.GONE);
         mMoviesRecyclerView.setVisibility(View.GONE);
+        mErrorMessageTextView.setText(message);
         mErrorMessageTextView.setVisibility(View.VISIBLE);
     }
 
@@ -116,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             loadMoviesData(SortType.RATING);
         }
         if (clickedItemId == R.id.action_favorites) {
+            getMoviesFromDb();
         }
         return false;
     }
