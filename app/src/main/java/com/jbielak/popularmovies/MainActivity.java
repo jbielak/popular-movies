@@ -15,7 +15,7 @@ import com.jbielak.popularmovies.data.MoviesDbService;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
-import com.jbielak.popularmovies.utilities.SortType;
+import com.jbielak.popularmovies.utilities.DisplayType;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUMBER_OF_COLUMNS = 2;
-    private static final SortType DEFAULT_SORT_TYPE = SortType.POPULAR;
+    private static final String SELECTED_DISPLAY_OPTION_KEY = "display_option";
 
     @BindView(R.id.recycler_view_movies)
     RecyclerView mMoviesRecyclerView;
@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tv_error_message_display)
     TextView mErrorMessageTextView;
 
+    private static DisplayType sDisplayType = DisplayType.POPULAR;
+
     private MovieAdapter mMovieAdapter;
     private MoviesService moviesService;
     private MoviesDbService moviesDbService;
@@ -43,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            sDisplayType = DisplayType.valueOf(savedInstanceState
+                    .getString(SELECTED_DISPLAY_OPTION_KEY));
+        }
+
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
@@ -58,26 +66,47 @@ public class MainActivity extends AppCompatActivity {
         mMovieAdapter = new MovieAdapter(this);
         mMoviesRecyclerView.setAdapter(mMovieAdapter);
 
-        loadMoviesData(DEFAULT_SORT_TYPE);
+        loadMoviesData(sDisplayType);
+
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(SELECTED_DISPLAY_OPTION_KEY, sDisplayType.getValue());
+        super.onSaveInstanceState(outState);
+    }
+
+    private void loadMoviesData(DisplayType displayType) {
+        switch (displayType) {
+            case POPULAR:
+                getMoviesFromNetwork(displayType);
+                break;
+            case RATING:
+                getMoviesFromNetwork(displayType);
+                break;
+            case FAVORITES:
+                getMoviesFromDb();
+                break;
+        }
+    }
+
+    private void getMoviesFromNetwork(DisplayType displayType) {
+        if (NetworkUtils.isOnline(getApplicationContext())) {
+            moviesService.getMovies(displayType);
+        } else {
+            showErrorMessage(getString(R.string.error_fetch_movies_message));
+        }
+    }
     private void getMoviesFromDb() {
         List<Movie> favoriteMovies = moviesDbService.getFavoriteMovies();
         if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
             mMovieAdapter.setMovies(favoriteMovies);
+            showMoviesDataView();
         } else {
             showErrorMessage(getString(R.string.favorite_movies_no_favorite_movies_in_db_message));
         }
     }
 
-    private void loadMoviesData(SortType sortType) {
-
-        if (NetworkUtils.isOnline(getApplicationContext())) {
-            moviesService.getMovies(sortType);
-        } else {
-            showErrorMessage(getString(R.string.error_fetch_movies_message));
-        }
-    }
 
     private void setupFetchMoviesDataCallback() {
         moviesService.setFetchMoviesDataListener(new FetchDataListener<List<Movie>>() {
@@ -123,13 +152,16 @@ public class MainActivity extends AppCompatActivity {
         int clickedItemId = item.getItemId();
 
         if (clickedItemId == R.id.action_sort_by_most_popular) {
-            loadMoviesData(SortType.POPULAR);
+            loadMoviesData(DisplayType.POPULAR);
+            sDisplayType = DisplayType.POPULAR;
         }
         if (clickedItemId == R.id.action_sort_by_most_highest_rated) {
-            loadMoviesData(SortType.RATING);
+            loadMoviesData(DisplayType.RATING);
+            sDisplayType = DisplayType.RATING;
         }
         if (clickedItemId == R.id.action_favorites) {
-            getMoviesFromDb();
+            loadMoviesData(DisplayType.FAVORITES);
+            sDisplayType = DisplayType.FAVORITES;
         }
         return false;
     }

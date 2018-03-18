@@ -9,7 +9,7 @@ import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.ReviewResponse;
 import com.jbielak.popularmovies.model.Video;
 import com.jbielak.popularmovies.model.VideoResponse;
-import com.jbielak.popularmovies.utilities.SortType;
+import com.jbielak.popularmovies.utilities.DisplayType;
 
 import java.util.List;
 
@@ -35,13 +35,13 @@ public class MoviesService {
                 NetworkUtils.BASE_URL);
     }
 
-    public void getMovies(SortType sortType){
+    public void getMovies(DisplayType displayType){
         if (fetchMoviesDataListener != null) {
             fetchMoviesDataListener.onPreExecute();
         }
 
 
-        Call<MovieResponse> call = moviesApiInterface.getMovies(sortType.getValue(), NetworkUtils.API_KEY);
+        Call<MovieResponse> call = moviesApiInterface.getMovies(displayType.getValue(), NetworkUtils.API_KEY);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override
