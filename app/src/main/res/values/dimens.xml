@@ -41,4 +41,11 @@
     <dimen name="review_author_text_size">12sp</dimen>
     <dimen name="review_content_text_size">12sp</dimen>
     <dimen name="review_item_margin">8dp</dimen>
+
+    <!-- Add to favorites -->
+    <dimen name="button_favorites_layout_width">70dp</dimen>
+    <dimen name="button_favorites_layout_height">40dp</dimen>
+    <dimen name="button_favorites_margin">10dp</dimen>
+    <dimen name="button_favorites_padding">6dp</dimen>
+
 </resources>

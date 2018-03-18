@@ -52,6 +52,18 @@
                     android:layout_height="wrap_content"
                     android:textSize="@dimen/movie_detail_text_small"
                     android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/button_add_to_favorites"
+                    android:layout_width="@dimen/button_favorites_layout_width"
+                    android:layout_height="@dimen/button_favorites_layout_height"
+                    android:layout_marginTop="@dimen/button_favorites_margin"
+                    android:padding="@dimen/button_favorites_padding"
+                    android:src="@drawable/ic_star_white_48dp"
+                    android:scaleType="centerInside"
+                    android:textColor="@android:color/white"
+                    android:background="@color/colorTitleBackground" />
+
             </LinearLayout>
 
             <TextView

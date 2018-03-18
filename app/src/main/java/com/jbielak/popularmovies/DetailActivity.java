@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.adapter.ReviewAdapter;
 import com.jbielak.popularmovies.adapter.VideoAdapter;
+import com.jbielak.popularmovies.data.DatabaseListener;
+import com.jbielak.popularmovies.data.MoviesDbService;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.Video;
@@ -60,8 +63,11 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view_reviews)
     RecyclerView mReviewsRecyclerView;
 
+    @BindView(R.id.button_add_to_favorites)
+    ImageButton mAddToFavoritesButton;
 
     private MoviesService mMoviesService;
+    private MoviesDbService mMoviesDbService;
     private Movie mMovie;
     private List<Video> mTrailers;
     private VideoAdapter mVideoAdapter;
@@ -76,6 +82,9 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mMoviesService = new MoviesService();
+        mMoviesDbService = new MoviesDbService(getApplicationContext());
+
+        setupDatabaseListener();
 
         setupFetchVideosDataCallback();
         setupTrailersRecyclerView();
@@ -99,6 +108,7 @@ public class DetailActivity extends AppCompatActivity {
             mOverviewTextView.setText(mMovie.getOverview());
             mMoviesService.getMovieVideos(String.valueOf(mMovie.getId()));
             mMoviesService.getMovieReviews(String.valueOf(mMovie.getId()));
+            setupFavoritesButton();
         }
     }
 
@@ -190,6 +200,24 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    private void setupDatabaseListener() {
+        mMoviesDbService.setDatabaseListener(new DatabaseListener() {
+            @Override
+            public void onInsertSuccess() {
+                Toast.makeText(getApplicationContext(), getString(R.string.movie_added_to_favorites_message),
+                        Toast.LENGTH_SHORT).show();
+                setRemoveFromFavoritesButton();
+            }
+
+            @Override
+            public void onRemoveSuccess() {
+                Toast.makeText(getApplicationContext(), getString(R.string.movie_removed_from_favorites_message),
+                        Toast.LENGTH_SHORT).show();
+                setAddToFavoritesButton();
+            }
+        });
+    }
+
     private List<Video> getVideosByType(List<Video> videos, String type) {
         List<Video> filteredVideos = new ArrayList<>();
         if (videos != null && !videos.isEmpty() && type != null) {
@@ -212,5 +240,35 @@ public class DetailActivity extends AppCompatActivity {
         if (mReviewsSectionRelativeLayout != null) {
             mReviewsSectionRelativeLayout.setVisibility(visibility);
         }
+    }
+
+    private void setupFavoritesButton() {
+        if (mMoviesDbService.isInDatabase(mMovie)) {
+            setRemoveFromFavoritesButton();
+        } else {
+            setAddToFavoritesButton();
+        }
+    }
+
+    private void setAddToFavoritesButton() {
+        mAddToFavoritesButton.setImageDrawable(
+                getResources().getDrawable(R.drawable.ic_star_white_48dp));
+        mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMoviesDbService.insertMovie(mMovie);
+            }
+        });
+    }
+
+    private void setRemoveFromFavoritesButton() {
+        mAddToFavoritesButton.setImageDrawable(
+                getResources().getDrawable(R.drawable.ic_delete_white_48dp));
+        mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mMoviesDbService.removeMovie(mMovie);
+            }
+        });
     }
 }
