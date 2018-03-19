@@ -93,6 +93,10 @@ public class MoviesDbService {
             if (databaseListener != null) {
                 databaseListener.onRemoveSuccess();
             }
+        } else {
+            if (databaseListener != null) {
+                databaseListener.onRemoveError();
+            }
         }
         return moviesDeleted;
     }
@@ -114,6 +118,10 @@ public class MoviesDbService {
         if (uri != null) {
             if (databaseListener != null) {
                 databaseListener.onInsertSuccess();
+            }
+        } else {
+            if (databaseListener != null) {
+                databaseListener.onInsertError();
             }
         }
     }

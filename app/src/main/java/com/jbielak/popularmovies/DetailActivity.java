@@ -232,10 +232,24 @@ public class DetailActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onInsertError() {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.movie_not_added_to_favorites_message),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
             public void onRemoveSuccess() {
                 Toast.makeText(getApplicationContext(), getString(R.string.movie_removed_from_favorites_message),
                         Toast.LENGTH_SHORT).show();
                 setAddToFavoritesButton();
+            }
+
+            @Override
+            public void onRemoveError() {
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.movie_not_removed_from_favorites_message),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }

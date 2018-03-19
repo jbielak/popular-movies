@@ -45,7 +45,9 @@
         You don\'t have favorite movies.
     </string>
     <string name="movie_added_to_favorites_message">Movie added to favorites.</string>
+    <string name="movie_not_added_to_favorites_message">An error occured while adding movie to favorites.</string>
     <string name="movie_removed_from_favorites_message">Movie removed from favorites.</string>
+    <string name="movie_not_removed_from_favorites_message">An error occured while removing movie from favorites.</string>
     <string name="add_to_favorites_button">Add to favorites</string>
     <string name="remove_from_favorites_button">Remove from favorites</string>
 

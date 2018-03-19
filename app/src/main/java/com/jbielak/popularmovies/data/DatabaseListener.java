@@ -6,5 +6,7 @@ package com.jbielak.popularmovies.data;
 
 public interface DatabaseListener {
     void onInsertSuccess();
+    void onInsertError();
     void onRemoveSuccess();
+    void onRemoveError();
 }
