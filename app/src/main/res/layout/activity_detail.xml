@@ -26,9 +26,9 @@
                 style="@style/PosterDetailImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/poster_image_description"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_title"
-                android:contentDescription="@string/poster_image_description"/>
+                app:layout_constraintTop_toBottomOf="@id/text_view_title" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -53,17 +53,34 @@
                     android:textSize="@dimen/movie_detail_text_small"
                     android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/button_add_to_favorites"
-                    android:layout_width="@dimen/button_favorites_layout_width"
-                    android:layout_height="@dimen/button_favorites_layout_height"
-                    android:layout_marginTop="@dimen/button_favorites_margin"
-                    android:padding="@dimen/button_favorites_padding"
-                    android:src="@drawable/ic_star_white_48dp"
-                    android:scaleType="centerInside"
-                    android:textColor="@android:color/white"
-                    android:background="@color/colorTitleBackground" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/button_margin"
+                    android:orientation="horizontal">
 
+                    <ImageButton
+                        android:id="@+id/button_add_to_favorites"
+                        android:layout_width="@dimen/button_layout_width"
+                        android:layout_height="@dimen/button_layout_height"
+                        android:background="@color/colorTitleBackground"
+                        android:padding="@dimen/button_padding"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_star_white_48dp"
+                        android:textColor="@android:color/white"
+                        android:layout_marginRight="@dimen/movie_detail_margin"/>
+
+                    <ImageButton
+                        android:id="@+id/button_share_trailer"
+                        android:layout_width="@dimen/button_layout_width"
+                        android:layout_height="@dimen/button_layout_height"
+                        android:background="@color/colorTitleBackground"
+                        android:padding="@dimen/button_padding"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_share_white_48dp"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <TextView

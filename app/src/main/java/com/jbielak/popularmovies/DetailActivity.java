@@ -1,5 +1,7 @@
 package com.jbielak.popularmovies;
 
+import android.net.Uri;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -67,6 +69,9 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.button_add_to_favorites)
     ImageButton mAddToFavoritesButton;
 
+    @BindView(R.id.button_share_trailer)
+    ImageButton mShareTrailerButton;
+
     private MoviesService mMoviesService;
     private MoviesDbService mMoviesDbService;
     private Movie mMovie;
@@ -132,6 +137,7 @@ public class DetailActivity extends AppCompatActivity {
         mMoviesService.getMovieVideos(String.valueOf(mMovie.getId()));
         mMoviesService.getMovieReviews(String.valueOf(mMovie.getId()));
         setupFavoritesButton();
+        setupShareButton();
     }
 
     private void setupTrailersRecyclerView() {
@@ -286,5 +292,29 @@ public class DetailActivity extends AppCompatActivity {
                 mMoviesDbService.removeMovie(mMovie);
             }
         });
+    }
+
+    private void setupShareButton() {
+        mShareTrailerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Video trailerToShare = mTrailers.get(0);
+                if (trailerToShare != null) {
+                    Uri trailerUri = NetworkUtils.buildVideoUri(trailerToShare.getKey());
+                    shareTrailer(trailerUri.toString());
+                }
+            }
+        });
+    }
+
+    private void shareTrailer(String trailerUrl) {
+        String mimeType = "text/plain";
+        String title = "Share trailer";
+
+        ShareCompat.IntentBuilder.from(this)
+                .setChooserTitle(title)
+                .setType(mimeType)
+                .setText(trailerUrl)
+                .startChooser();
     }
 }
