@@ -35,6 +35,7 @@ import butterknife.ButterKnife;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String VIDEO_TYPE_TRAILER = "Trailer";
+    private static final String SELECTED_MOVIE_KEY = "selected_movie";
 
     @BindView(R.id.text_view_title)
     TextView mTitleTextView;
@@ -81,6 +82,14 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        if (savedInstanceState != null) {
+            mMovie = savedInstanceState.getParcelable(SELECTED_MOVIE_KEY);
+        } else {
+            if (getIntent().hasExtra(MovieAdapter.EXTRA_MOVIE)) {
+                mMovie = getIntent().getParcelableExtra(MovieAdapter.EXTRA_MOVIE);
+            }
+        }
+
         mMoviesService = new MoviesService();
         mMoviesDbService = new MoviesDbService(getApplicationContext());
 
@@ -93,29 +102,36 @@ public class DetailActivity extends AppCompatActivity {
         setupReviewsRecyclerView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (getIntent().hasExtra(MovieAdapter.EXTRA_MOVIE)) {
-            mMovie = getIntent().getParcelableExtra(MovieAdapter.EXTRA_MOVIE);
 
-            mTitleTextView.setText(mMovie.getTitle());
-            Picasso.with(this)
-                    .load(NetworkUtils.buildPosterUrl(mMovie.getPosterPath()).toString())
-                    .into(mPosterImageView);
-            String date = DateUtils.getYearString(mMovie.getReleaseDate());
-            mReleaseDateTextView.setText(date == null
-                    ? getString(R.string.unknown_release_date) : date);
-            mVoteAverageTextView.setText(getString(R.string.vote_average, mMovie.getVoteAverage())
-                    .replace(',', '.'));
-            mOverviewTextView.setText(mMovie.getOverview());
-            mMoviesService.getMovieVideos(String.valueOf(mMovie.getId()));
-            mMoviesService.getMovieReviews(String.valueOf(mMovie.getId()));
-            setupFavoritesButton();
-        }
+        setupMovieView();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(SELECTED_MOVIE_KEY, mMovie);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mian, menu);
         return true;
+    }
+
+    private void setupMovieView() {
+        mTitleTextView.setText(mMovie.getTitle());
+        Picasso.with(this)
+                .load(NetworkUtils.buildPosterUrl(mMovie.getPosterPath()).toString())
+                .into(mPosterImageView);
+        String date = DateUtils.getYearString(mMovie.getReleaseDate());
+        mReleaseDateTextView.setText(date == null
+                ? getString(R.string.unknown_release_date) : date);
+        mVoteAverageTextView.setText(getString(R.string.vote_average, mMovie.getVoteAverage())
+                .replace(',', '.'));
+        mOverviewTextView.setText(mMovie.getOverview());
+        mMoviesService.getMovieVideos(String.valueOf(mMovie.getId()));
+        mMoviesService.getMovieReviews(String.valueOf(mMovie.getId()));
+        setupFavoritesButton();
     }
 
     private void setupTrailersRecyclerView() {

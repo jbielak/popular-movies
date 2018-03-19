@@ -23,7 +23,8 @@
         </activity>
         <activity android:name=".DetailActivity"
             android:label="@string/move_detail_activity_label"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop"></activity>
 
         <provider
             android:name=".data.MovieContentProvider"
