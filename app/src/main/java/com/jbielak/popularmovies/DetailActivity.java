@@ -100,10 +100,10 @@ public class DetailActivity extends AppCompatActivity {
 
         setupDatabaseListener();
 
-        setupFetchVideosDataCallback();
+        setupFetchVideosDataListener();
         setupTrailersRecyclerView();
 
-        setupFetchReviewsDataCallback();
+        setupFetchReviewsDataListener();
         setupReviewsRecyclerView();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,7 +164,7 @@ public class DetailActivity extends AppCompatActivity {
         mReviewsRecyclerView.setAdapter(mReviewAdapter);
     }
 
-    private void setupFetchVideosDataCallback() {
+    private void setupFetchVideosDataListener() {
         mMoviesService.setFetchVideosDataListener(new FetchDataListener<List<Video>>() {
             @Override
             public void onPreExecute() {
@@ -193,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFetchReviewsDataCallback() {
+    private void setupFetchReviewsDataListener() {
         mMoviesService.setFetchReviewsDataListener(new FetchDataListener<List<Review>>() {
             @Override
             public void onPreExecute() {

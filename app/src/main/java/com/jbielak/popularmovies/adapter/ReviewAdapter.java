@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.jbielak.popularmovies.R;
 import com.jbielak.popularmovies.model.Review;
-import com.jbielak.popularmovies.network.NetworkUtils;
 
 import java.util.List;
 
