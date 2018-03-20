@@ -2,6 +2,7 @@ package com.jbielak.popularmovies;
 
 import android.net.Uri;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -38,6 +39,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private static final String VIDEO_TYPE_TRAILER = "Trailer";
     private static final String SELECTED_MOVIE_KEY = "selected_movie";
+    private static final String SCROLL_POSITION_KEY = "scroll_position";
+
+    @BindView(R.id.nested_scroll_view_movie_details)
+    NestedScrollView mMovieDetailsNestedScrollView;
 
     @BindView(R.id.text_view_title)
     TextView mTitleTextView;
@@ -79,6 +84,7 @@ public class DetailActivity extends AppCompatActivity {
     private VideoAdapter mVideoAdapter;
     private List<Review> mReviews;
     private ReviewAdapter mReviewAdapter;
+    private int[] mScrollViewPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +95,8 @@ public class DetailActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mMovie = savedInstanceState.getParcelable(SELECTED_MOVIE_KEY);
+            mScrollViewPosition = savedInstanceState.getIntArray(SCROLL_POSITION_KEY);
+
         } else {
             if (getIntent().hasExtra(MovieAdapter.EXTRA_MOVIE)) {
                 mMovie = getIntent().getParcelableExtra(MovieAdapter.EXTRA_MOVIE);
@@ -114,6 +122,9 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(SELECTED_MOVIE_KEY, mMovie);
+        outState.putIntArray(SCROLL_POSITION_KEY,
+                new int[] {mMovieDetailsNestedScrollView.getScrollX(),
+                mMovieDetailsNestedScrollView.getScrollY()});
         super.onSaveInstanceState(outState);
     }
 
@@ -180,6 +191,7 @@ public class DetailActivity extends AppCompatActivity {
                     } else {
                         mVideoAdapter.setTrailers(mTrailers);
                         setTrailersViewVisibility(View.VISIBLE);
+                        scrollToSavedPosition();
                     }
                 }
             }
@@ -209,6 +221,7 @@ public class DetailActivity extends AppCompatActivity {
                     } else {
                         mReviewAdapter.setReviews(mReviews);
                         setReviewsViewVisibility(View.VISIBLE);
+                        scrollToSavedPosition();
                     }
                 }
             }
@@ -330,5 +343,15 @@ public class DetailActivity extends AppCompatActivity {
                 .setType(mimeType)
                 .setText(trailerUrl)
                 .startChooser();
+    }
+
+    private void scrollToSavedPosition() {
+        if (mScrollViewPosition != null) {
+            mMovieDetailsNestedScrollView.post(new Runnable() {
+                public void run() {
+                    mMovieDetailsNestedScrollView.scrollTo(mScrollViewPosition[0], mScrollViewPosition[1]);
+                }
+            });
+        }
     }
 }
