@@ -1,9 +1,11 @@
 package com.jbielak.popularmovies;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +26,6 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int NUMBER_OF_COLUMNS = 2;
     private static final String SELECTED_DISPLAY_OPTION_KEY = "display_option";
 
     @BindView(R.id.recycler_view_movies)
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
         mMoviesRecyclerView.setLayoutManager(gridLayoutManager);
 
         mMoviesRecyclerView.setHasFixedSize(true);
@@ -164,5 +165,15 @@ public class MainActivity extends AppCompatActivity {
             sDisplayType = DisplayType.FAVORITES;
         }
         return false;
+    }
+
+    private static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int scalingFactor = 180;
+        int noOfColumns = (int) (dpWidth / scalingFactor);
+        if(noOfColumns < 2)
+            noOfColumns = 2;
+        return noOfColumns;
     }
 }
