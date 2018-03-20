@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            sDisplayType = DisplayType.valueOf(savedInstanceState
+            sDisplayType = DisplayType.getDisplayTypeByValue(savedInstanceState
                     .getString(SELECTED_DISPLAY_OPTION_KEY));
         }
 

@@ -18,4 +18,12 @@ public enum DisplayType {
     public String getValue() {
         return value;
     }
+
+    public static DisplayType getDisplayTypeByValue(String value) {
+        for (int i = 0; i < DisplayType.values().length; i++) {
+            if (value.equals(DisplayType.values()[i].value))
+                return DisplayType.values()[i];
+        }
+        return null;
+    }
 }
