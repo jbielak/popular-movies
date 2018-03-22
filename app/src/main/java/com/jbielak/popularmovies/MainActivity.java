@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.data.MoviesDbService;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private MoviesService moviesService;
     private MoviesDbService moviesDbService;
 
+    private EndlessRecyclerViewScrollListener mScrollListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,15 +63,21 @@ public class MainActivity extends AppCompatActivity {
         moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
+                calculateNoOfColumns(this));
         mMoviesRecyclerView.setLayoutManager(gridLayoutManager);
 
         mMoviesRecyclerView.setHasFixedSize(true);
         mMovieAdapter = new MovieAdapter(this);
         mMoviesRecyclerView.setAdapter(mMovieAdapter);
-
-        loadMoviesData(sDisplayType);
-
+        mScrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadMoviesData(sDisplayType, page);
+            }
+        };
+        mMoviesRecyclerView.addOnScrollListener(mScrollListener);
+        loadMoviesData(sDisplayType, 1);
     }
 
     @Override
@@ -77,13 +86,13 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
-    private void loadMoviesData(DisplayType displayType) {
+    private void loadMoviesData(DisplayType displayType, int page) {
         switch (displayType) {
             case POPULAR:
-                getMoviesFromNetwork(displayType);
+                getMoviesFromNetwork(displayType, page);
                 break;
             case RATING:
-                getMoviesFromNetwork(displayType);
+                getMoviesFromNetwork(displayType, page);
                 break;
             case FAVORITES:
                 getMoviesFromDb();
@@ -91,11 +100,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getMoviesFromNetwork(DisplayType displayType) {
+    private void getMoviesFromNetwork(DisplayType displayType, int page) {
         if (NetworkUtils.isOnline(getApplicationContext())) {
-            moviesService.getMovies(displayType);
+            moviesService.getMovies(displayType, page);
         } else {
-            showErrorMessage(getString(R.string.error_fetch_movies_message));
+            if (mMovieAdapter.getItemCount() == 0) {
+                showErrorMessage(getString(R.string.error_fetch_movies_message));
+            } else {
+                Toast.makeText(getApplicationContext(), getString(R.string.error_fetch_movies_message),
+                        Toast.LENGTH_SHORT ).show();
+            }
         }
     }
     private void getMoviesFromDb() {
@@ -108,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void setupFetchMoviesDataCallback() {
         moviesService.setFetchMoviesDataListener(new FetchDataListener<List<Movie>>() {
             @Override
@@ -118,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(List<Movie> movies) {
-                mMovieAdapter.setMovies(movies);
+                mMovieAdapter.addMovies(movies);
                 showMoviesDataView();
             }
 
@@ -153,15 +166,18 @@ public class MainActivity extends AppCompatActivity {
         int clickedItemId = item.getItemId();
 
         if (clickedItemId == R.id.action_sort_by_most_popular) {
-            loadMoviesData(DisplayType.POPULAR);
+            clearMoviesRecyclerView();
+            loadMoviesData(DisplayType.POPULAR, 1);
             sDisplayType = DisplayType.POPULAR;
         }
         if (clickedItemId == R.id.action_sort_by_most_highest_rated) {
-            loadMoviesData(DisplayType.RATING);
+            clearMoviesRecyclerView();
+            loadMoviesData(DisplayType.RATING, 1);
             sDisplayType = DisplayType.RATING;
         }
         if (clickedItemId == R.id.action_favorites) {
-            loadMoviesData(DisplayType.FAVORITES);
+            clearMoviesRecyclerView();
+            loadMoviesData(DisplayType.FAVORITES, 0);
             sDisplayType = DisplayType.FAVORITES;
         }
         return false;
@@ -175,5 +191,11 @@ public class MainActivity extends AppCompatActivity {
         if(noOfColumns < 2)
             noOfColumns = 2;
         return noOfColumns;
+    }
+
+    private void clearMoviesRecyclerView() {
+        mMovieAdapter.clearMovies();
+        mMovieAdapter.notifyDataSetChanged();
+        mScrollListener.resetState();
     }
 }

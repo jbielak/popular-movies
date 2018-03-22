@@ -30,18 +30,25 @@ public class MoviesService {
     private FetchDataListener<List<Video>> fetchVideosDataListener;
     private FetchDataListener<List<Review>> fetchReviewsDataListener;
 
+    //endless scroll
+    private int visibleThreshold = 20;
+    private int lastVisibleItem, totalItemCount;
+    private boolean loading;
+    private OnLoadMoreListener onLoadMoreListener;
+
     public MoviesService() {
         moviesApiInterface = ApiClientGenerator.createClient(MoviesApiInterface.class,
                 NetworkUtils.BASE_URL);
     }
 
-    public void getMovies(DisplayType displayType){
+    public void getMovies(DisplayType displayType, int page){
         if (fetchMoviesDataListener != null) {
             fetchMoviesDataListener.onPreExecute();
         }
 
 
-        Call<MovieResponse> call = moviesApiInterface.getMovies(displayType.getValue(), NetworkUtils.API_KEY);
+        Call<MovieResponse> call = moviesApiInterface.getMovies(displayType.getValue(),
+                NetworkUtils.API_KEY, page);
 
         call.enqueue(new Callback<MovieResponse>() {
             @Override
@@ -135,5 +142,17 @@ public class MoviesService {
 
     public void setFetchReviewsDataListener(FetchDataListener<List<Review>> fetchReviewsDataListener) {
         this.fetchReviewsDataListener = fetchReviewsDataListener;
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
+    }
+
+    public void setLoaded() {
+        loading = false;
     }
 }

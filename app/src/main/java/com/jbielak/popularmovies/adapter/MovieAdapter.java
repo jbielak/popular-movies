@@ -14,17 +14,19 @@ import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     public static final String EXTRA_MOVIE = "EXTRA_MOVIE";
 
-    private List<Movie> movies;
+    private List<Movie> movies = new ArrayList<>();
     private Context context;
 
     public MovieAdapter(Context context) {
         this.context = context;
+        movies = new ArrayList<>();
     }
 
     @Override
@@ -71,5 +73,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
+    }
+
+    public void addMovies(List<Movie> newMovies) {
+        if (movies == null || movies.isEmpty()) {
+            movies = newMovies;
+            //notifyDataSetChanged();
+        } else {
+            movies.addAll(newMovies);
+        }
+    }
+
+    public void clearMovies() {
+        movies.clear();
     }
 }
