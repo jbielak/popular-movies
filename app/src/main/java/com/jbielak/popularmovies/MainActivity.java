@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     private static final String SELECTED_DISPLAY_OPTION_KEY = "display_option";
+    private static final String MOVIES_KEY = "movies_list";
 
     @BindView(R.id.recycler_view_movies)
     RecyclerView mMoviesRecyclerView;
@@ -43,17 +44,13 @@ public class MainActivity extends AppCompatActivity {
     private MovieAdapter mMovieAdapter;
     private MoviesService moviesService;
     private MoviesDbService moviesDbService;
+    private List<Movie> movies;
 
     private EndlessRecyclerViewScrollListener mScrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            sDisplayType = DisplayType.getDisplayTypeByValue(savedInstanceState
-                    .getString(SELECTED_DISPLAY_OPTION_KEY));
-        }
 
         setContentView(R.layout.activity_main);
 
@@ -77,12 +74,27 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mMoviesRecyclerView.addOnScrollListener(mScrollListener);
-        loadMoviesData(sDisplayType, 1);
+
+        if (savedInstanceState != null &&
+                savedInstanceState.containsKey(SELECTED_DISPLAY_OPTION_KEY)) {
+            sDisplayType = DisplayType.getDisplayTypeByValue(savedInstanceState
+                    .getString(SELECTED_DISPLAY_OPTION_KEY));
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey(MOVIES_KEY)) {
+            movies = savedInstanceState.getParcelableArrayList(MOVIES_KEY);
+            mMovieAdapter.setMovies(movies);
+            showMoviesDataView();
+        } else {
+            loadMoviesData(sDisplayType, 1);
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(SELECTED_DISPLAY_OPTION_KEY, sDisplayType.getValue());
+        if (mMovieAdapter.getItemCount() > 0) {
+            outState.putParcelableArrayList(MOVIES_KEY, mMovieAdapter.getMoviesArrayList());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -108,10 +120,11 @@ public class MainActivity extends AppCompatActivity {
                 showErrorMessage(getString(R.string.error_fetch_movies_message));
             } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.error_fetch_movies_message),
-                        Toast.LENGTH_SHORT ).show();
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
+
     private void getMoviesFromDb() {
         List<Movie> favoriteMovies = moviesDbService.getFavoriteMovies();
         if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
@@ -188,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int scalingFactor = 180;
         int noOfColumns = (int) (dpWidth / scalingFactor);
-        if(noOfColumns < 2)
+        if (noOfColumns < 2)
             noOfColumns = 2;
         return noOfColumns;
     }

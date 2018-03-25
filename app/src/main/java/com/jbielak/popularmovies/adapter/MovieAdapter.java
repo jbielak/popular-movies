@@ -78,7 +78,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     public void addMovies(List<Movie> newMovies) {
         if (movies == null || movies.isEmpty()) {
             movies = newMovies;
-            //notifyDataSetChanged();
         } else {
             movies.addAll(newMovies);
         }
@@ -86,5 +85,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     public void clearMovies() {
         movies.clear();
+    }
+
+    public ArrayList<Movie> getMoviesArrayList() {
+        return (ArrayList<Movie>) movies;
     }
 }
