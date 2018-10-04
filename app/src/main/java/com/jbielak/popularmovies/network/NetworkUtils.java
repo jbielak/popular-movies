@@ -14,11 +14,11 @@ public abstract class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String POSTER_BASE_URL = "https://image.tmdb.org/t/p/";
     private static final String POSTER_SIZE = "w185";
 
-    public static final String BASE_URL ="http://api.themoviedb.org/";
-    private static final String MOVIES_BASE_URL = "http://api.themoviedb.org/3/movie/";
+    public static final String BASE_URL ="https://api.themoviedb.org/";
+    private static final String MOVIES_BASE_URL = "https://api.themoviedb.org/3/movie/";
     private static final String API_KEY_PARAM = "api_key";
     public static final String API_KEY = BuildConfig.MOVIES_DB_API_KEY; // put your API key here
 
