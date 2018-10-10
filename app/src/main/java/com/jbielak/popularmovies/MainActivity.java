@@ -1,11 +1,15 @@
 package com.jbielak.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final String SELECTED_DISPLAY_OPTION_KEY = "display_option";
     private static final String MOVIES_KEY = "movies_list";
@@ -126,13 +132,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getMoviesFromDb() {
-        List<Movie> favoriteMovies = mMoviesDatabase.movieDao().getAllMovies();
-        if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
-            mMovieAdapter.setMovies(favoriteMovies);
-            showMoviesDataView();
-        } else {
-            showErrorMessage(getString(R.string.favorite_movies_no_favorite_movies_in_db_message));
-        }
+        LiveData<List<Movie>> movies = mMoviesDatabase.movieDao().getAllMovies();
+        movies.observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> favoriteMovies) {
+                Log.d(TAG, "Receiving movies database update from LiveData");
+                if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
+                    mMovieAdapter.setMovies(favoriteMovies);
+                    showMoviesDataView();
+                } else {
+                    showErrorMessage(getString(R.string.favorite_movies_no_favorite_movies_in_db_message));
+                }
+            }
+        });
+
     }
 
     private void setupFetchMoviesDataCallback() {

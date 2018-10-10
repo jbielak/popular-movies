@@ -1,6 +1,9 @@
 package com.jbielak.popularmovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -257,11 +260,17 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setupFavoritesButton() {
-        if (mMoviesDatabase.movieDao().getMovie(mMovie.getId()) != null) {
-            setRemoveFromFavoritesButton();
-        } else {
-            setAddToFavoritesButton();
-        }
+        LiveData<Movie> movie = mMoviesDatabase.movieDao().getMovie(mMovie.getId());
+        movie.observe(this, new Observer<Movie>() {
+            @Override
+            public void onChanged(@Nullable Movie changedMovie) {
+                if (changedMovie != null) {
+                    setRemoveFromFavoritesButton();
+                } else {
+                    setAddToFavoritesButton();
+                }
+            }
+        });
     }
 
     private void setAddToFavoritesButton() {
@@ -271,7 +280,6 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mMoviesDatabase.movieDao().insertMovie(mMovie);
-                setRemoveFromFavoritesButton();
             }
         });
     }
@@ -283,7 +291,6 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mMoviesDatabase.movieDao().deleteMovie(mMovie);
-                setAddToFavoritesButton();
             }
         });
     }

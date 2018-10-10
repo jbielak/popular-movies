@@ -1,5 +1,6 @@
 package com.jbielak.popularmovies.database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -15,10 +16,10 @@ import java.util.List;
 public interface MovieDao {
 
     @Query("SELECT * FROM movies")
-    List<Movie> getAllMovies();
+    LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movies WHERE id = :id LIMIT 1")
-    Movie getMovie(Long id);
+    LiveData<Movie> getMovie(Long id);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie movie);

@@ -40,14 +40,43 @@ public class DatabaseInstrumentedTest {
     }
 
     @Test
-    public void insertAndGetMovie() {
+    public void insertAndGetMovies() throws InterruptedException {
         mMoviesDatabase.movieDao().insertMovie(MOVIE);
 
-        List<Movie> movies = mMoviesDatabase.movieDao().getAllMovies();
+        List<Movie> movies = LiveDataTestUtil.getValue(mMoviesDatabase.movieDao().getAllMovies());
         assertThat(movies.size(), is(1));
         Movie dbMovie = movies.get(0);
         assertEquals(dbMovie.getId(), MOVIE.getId());
         assertEquals(dbMovie.getTitle(), MOVIE.getTitle());
+    }
+
+    @Test
+    public void getMovieById() throws InterruptedException {
+        mMoviesDatabase.movieDao().insertMovie(MOVIE);
+
+        Movie dbMovie = LiveDataTestUtil.getValue(mMoviesDatabase.movieDao().getMovie(MOVIE.getId()));
+        assertEquals(dbMovie.getId(), MOVIE.getId());
+        assertEquals(dbMovie.getTitle(), MOVIE.getTitle());
+    }
+
+    @Test
+    public void updateMovie() throws InterruptedException {
+        mMoviesDatabase.movieDao().insertMovie(MOVIE);
+        MOVIE.setTitle("New Title");
+        mMoviesDatabase.movieDao().updateMovie(MOVIE);
+
+        Movie dbMovie = LiveDataTestUtil.getValue(mMoviesDatabase.movieDao().getMovie(MOVIE.getId()));
+        assertEquals(dbMovie.getId(), MOVIE.getId());
+        assertEquals(dbMovie.getTitle(), "New Title");
+    }
+
+    @Test
+    public void deleteMovie() throws InterruptedException {
+        mMoviesDatabase.movieDao().insertMovie(MOVIE);
+        mMoviesDatabase.movieDao().deleteMovie(MOVIE);
+        List<Movie> movies = LiveDataTestUtil.getValue(mMoviesDatabase.movieDao().getAllMovies());
+        mMoviesDatabase.movieDao().deleteMovie(MOVIE);
+        assertThat(movies.size(), is(0));
     }
 
 }
