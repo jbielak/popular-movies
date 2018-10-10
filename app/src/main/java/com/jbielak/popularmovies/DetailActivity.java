@@ -279,7 +279,12 @@ public class DetailActivity extends AppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMoviesDatabase.movieDao().insertMovie(mMovie);
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMoviesDatabase.movieDao().insertMovie(mMovie);
+                    }
+                });
             }
         });
     }
@@ -290,7 +295,12 @@ public class DetailActivity extends AppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMoviesDatabase.movieDao().deleteMovie(mMovie);
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        mMoviesDatabase.movieDao().deleteMovie(mMovie);
+                    }
+                });
             }
         });
     }
