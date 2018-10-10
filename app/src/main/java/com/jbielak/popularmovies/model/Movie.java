@@ -1,5 +1,8 @@
 package com.jbielak.popularmovies.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -13,19 +16,31 @@ import java.util.List;
  * Created by Justyna on 2018-02-27.
  */
 
+@Entity(tableName = "movies")
 public class Movie implements Parcelable {
 
+    @PrimaryKey
     private long id;
+
     private String title;
+
     @SerializedName("release_date")
     private Date releaseDate;
+
     @SerializedName("poster_path")
     private String posterPath;
+
     @SerializedName("vote_average")
     private Double voteAverage;
+
     private Double popularity;
+
     private String overview;
+
+    @Ignore
     private List<Video> videos;
+
+    @Ignore
     private List<Review> reviews;
 
     public Movie() {
