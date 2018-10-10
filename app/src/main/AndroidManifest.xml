@@ -26,11 +26,6 @@
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTop"></activity>
 
-        <provider
-            android:name=".data.MovieContentProvider"
-            android:authorities="com.jbielak.popularmovies"
-            android:exported="false"/>
-
     </application>
 
 </manifest>

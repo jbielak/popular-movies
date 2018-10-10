@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
-import com.jbielak.popularmovies.data.MoviesDbService;
+import com.jbielak.popularmovies.database.MoviesDatabase;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieAdapter mMovieAdapter;
     private MoviesService moviesService;
-    private MoviesDbService moviesDbService;
+    private MoviesDatabase mMoviesDatabase;
     private List<Movie> movies;
 
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        moviesDbService = new MoviesDbService(getApplicationContext());
+        mMoviesDatabase = MoviesDatabase.getInstance(getApplicationContext());
         moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getMoviesFromDb() {
-        List<Movie> favoriteMovies = moviesDbService.getFavoriteMovies();
+        List<Movie> favoriteMovies = mMoviesDatabase.movieDao().getAllMovies();
         if (favoriteMovies != null && !favoriteMovies.isEmpty()) {
             mMovieAdapter.setMovies(favoriteMovies);
             showMoviesDataView();

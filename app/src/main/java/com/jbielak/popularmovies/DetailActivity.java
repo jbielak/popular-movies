@@ -19,8 +19,7 @@ import android.widget.Toast;
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.adapter.ReviewAdapter;
 import com.jbielak.popularmovies.adapter.VideoAdapter;
-import com.jbielak.popularmovies.data.DatabaseListener;
-import com.jbielak.popularmovies.data.MoviesDbService;
+import com.jbielak.popularmovies.database.MoviesDatabase;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.Video;
@@ -78,7 +77,7 @@ public class DetailActivity extends AppCompatActivity {
     ImageButton mShareTrailerButton;
 
     private MoviesService mMoviesService;
-    private MoviesDbService mMoviesDbService;
+    private MoviesDatabase mMoviesDatabase;
     private Movie mMovie;
     private List<Video> mTrailers;
     private VideoAdapter mVideoAdapter;
@@ -104,9 +103,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         mMoviesService = new MoviesService();
-        mMoviesDbService = new MoviesDbService(getApplicationContext());
-
-        setupDatabaseListener();
+        mMoviesDatabase = MoviesDatabase.getInstance(getApplicationContext());
 
         setupFetchVideosDataListener();
         setupTrailersRecyclerView();
@@ -235,38 +232,6 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void setupDatabaseListener() {
-        mMoviesDbService.setDatabaseListener(new DatabaseListener() {
-            @Override
-            public void onInsertSuccess() {
-                Toast.makeText(getApplicationContext(), getString(R.string.movie_added_to_favorites_message),
-                        Toast.LENGTH_SHORT).show();
-                setRemoveFromFavoritesButton();
-            }
-
-            @Override
-            public void onInsertError() {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.movie_not_added_to_favorites_message),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onRemoveSuccess() {
-                Toast.makeText(getApplicationContext(), getString(R.string.movie_removed_from_favorites_message),
-                        Toast.LENGTH_SHORT).show();
-                setAddToFavoritesButton();
-            }
-
-            @Override
-            public void onRemoveError() {
-                Toast.makeText(getApplicationContext(),
-                        getString(R.string.movie_not_removed_from_favorites_message),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private List<Video> getVideosByType(List<Video> videos, String type) {
         List<Video> filteredVideos = new ArrayList<>();
         if (videos != null && !videos.isEmpty() && type != null) {
@@ -292,7 +257,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setupFavoritesButton() {
-        if (mMoviesDbService.isInDatabase(mMovie)) {
+        if (mMoviesDatabase.movieDao().getMovie(mMovie.getId()) != null) {
             setRemoveFromFavoritesButton();
         } else {
             setAddToFavoritesButton();
@@ -305,7 +270,8 @@ public class DetailActivity extends AppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMoviesDbService.insertMovie(mMovie);
+                mMoviesDatabase.movieDao().insertMovie(mMovie);
+                setRemoveFromFavoritesButton();
             }
         });
     }
@@ -316,7 +282,8 @@ public class DetailActivity extends AppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mMoviesDbService.removeMovie(mMovie);
+                mMoviesDatabase.movieDao().deleteMovie(mMovie);
+                setAddToFavoritesButton();
             }
         });
     }

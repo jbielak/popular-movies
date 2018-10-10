@@ -43,9 +43,6 @@ public class Movie implements Parcelable {
     @Ignore
     private List<Review> reviews;
 
-    public Movie() {
-    }
-
     public Movie(long id, String title, Date releaseDate, String posterPath, Double voteAverage,
                  Double popularity, String overview, List<Video> videos, List<Review> reviews) {
         this.id = id;
