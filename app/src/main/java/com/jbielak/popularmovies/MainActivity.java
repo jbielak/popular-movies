@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.database.MovieDao;
-import com.jbielak.popularmovies.database.MoviesDatabase;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
@@ -54,8 +52,10 @@ public class MainActivity extends DaggerAppCompatActivity {
     @Inject
     MovieDao mMovieDao;
 
+    @Inject
+    MoviesService mMoviesService;
+
     private MovieAdapter mMovieAdapter;
-    private MoviesService moviesService;
     private List<Movie> movies;
 
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -68,7 +68,6 @@ public class MainActivity extends DaggerAppCompatActivity {
 
         ButterKnife.bind(this);
 
-        moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this,
@@ -125,7 +124,7 @@ public class MainActivity extends DaggerAppCompatActivity {
 
     private void getMoviesFromNetwork(DisplayType displayType, int page) {
         if (NetworkUtils.isOnline(getApplicationContext())) {
-            moviesService.getMovies(displayType, page);
+            mMoviesService.getMovies(displayType, page);
         } else {
             if (mMovieAdapter.getItemCount() == 0) {
                 showErrorMessage(getString(R.string.error_fetch_movies_message));
@@ -154,7 +153,7 @@ public class MainActivity extends DaggerAppCompatActivity {
     }
 
     private void setupFetchMoviesDataCallback() {
-        moviesService.setFetchMoviesDataListener(new FetchDataListener<List<Movie>>() {
+        mMoviesService.setFetchMoviesDataListener(new FetchDataListener<List<Movie>>() {
             @Override
             public void onPreExecute() {
                 mLoadingIndicator.setVisibility(View.VISIBLE);

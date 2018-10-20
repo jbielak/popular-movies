@@ -88,7 +88,9 @@ public class DetailActivity extends DaggerAppCompatActivity {
     @Inject
     AppExecutors mAppExecutors;
 
-    private MoviesService mMoviesService;
+    @Inject
+    MoviesService mMoviesService;
+
     private Movie mMovie;
     private List<Video> mTrailers;
     private VideoAdapter mVideoAdapter;
@@ -112,8 +114,6 @@ public class DetailActivity extends DaggerAppCompatActivity {
                 mMovie = getIntent().getParcelableExtra(MovieAdapter.EXTRA_MOVIE);
             }
         }
-
-        mMoviesService = new MoviesService();
 
         setupFetchVideosDataListener();
         setupTrailersRecyclerView();

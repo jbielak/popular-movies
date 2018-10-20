@@ -36,9 +36,8 @@ public class MoviesService {
     private boolean loading;
     private OnLoadMoreListener onLoadMoreListener;
 
-    public MoviesService() {
-        moviesApiInterface = ApiClientGenerator.createClient(MoviesApiInterface.class,
-                NetworkUtils.BASE_URL);
+    public MoviesService(MoviesApiInterface moviesApiInterface) {
+        this.moviesApiInterface = moviesApiInterface;
     }
 
     public void getMovies(DisplayType displayType, int page){
