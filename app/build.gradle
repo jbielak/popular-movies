@@ -31,6 +31,10 @@ android {
             buildConfigField "String", "MOVIES_DB_API_KEY", "\"${props.getProperty("moviesDbApiKey")}\""
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 repositories {
