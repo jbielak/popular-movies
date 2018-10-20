@@ -27,6 +27,7 @@ import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.Video;
 import com.jbielak.popularmovies.network.MoviesService;
 import com.jbielak.popularmovies.network.NetworkUtils;
+import com.jbielak.popularmovies.utilities.AppExecutors;
 import com.jbielak.popularmovies.utilities.DateUtils;
 import com.squareup.picasso.Picasso;
 
@@ -83,6 +84,9 @@ public class DetailActivity extends DaggerAppCompatActivity {
 
     @Inject
     MovieDao mMovieDao;
+
+    @Inject
+    AppExecutors mAppExecutors;
 
     private MoviesService mMoviesService;
     private Movie mMovie;
@@ -282,7 +286,7 @@ public class DetailActivity extends DaggerAppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                mAppExecutors.diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
                         mMovieDao.insertMovie(mMovie);
@@ -298,7 +302,7 @@ public class DetailActivity extends DaggerAppCompatActivity {
         mAddToFavoritesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                mAppExecutors.diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
                         mMovieDao.deleteMovie(mMovie);
