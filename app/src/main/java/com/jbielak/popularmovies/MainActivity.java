@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
+import com.jbielak.popularmovies.database.MovieDao;
 import com.jbielak.popularmovies.database.MoviesDatabase;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.network.MoviesService;
@@ -26,10 +27,13 @@ import com.jbielak.popularmovies.utilities.DisplayType;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -47,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static DisplayType sDisplayType = DisplayType.POPULAR;
 
+    @Inject
+    MovieDao mMovieDao;
+
     private MovieAdapter mMovieAdapter;
     private MoviesService moviesService;
-    private MoviesDatabase mMoviesDatabase;
     private List<Movie> movies;
 
     private EndlessRecyclerViewScrollListener mScrollListener;
@@ -62,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        mMoviesDatabase = MoviesDatabase.getInstance(getApplicationContext());
         moviesService = new MoviesService();
         setupFetchMoviesDataCallback();
 
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getMoviesFromDb() {
-        LiveData<List<Movie>> movies = mMoviesDatabase.movieDao().getAllMovies();
+        LiveData<List<Movie>> movies = mMovieDao.getAllMovies();
         movies.observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> favoriteMovies) {

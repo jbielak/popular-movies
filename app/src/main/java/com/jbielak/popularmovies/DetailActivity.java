@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ShareCompat;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +21,7 @@ import android.widget.Toast;
 import com.jbielak.popularmovies.adapter.MovieAdapter;
 import com.jbielak.popularmovies.adapter.ReviewAdapter;
 import com.jbielak.popularmovies.adapter.VideoAdapter;
-import com.jbielak.popularmovies.database.MoviesDatabase;
+import com.jbielak.popularmovies.database.MovieDao;
 import com.jbielak.popularmovies.model.Movie;
 import com.jbielak.popularmovies.model.Review;
 import com.jbielak.popularmovies.model.Video;
@@ -34,10 +33,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends DaggerAppCompatActivity {
 
     private static final String VIDEO_TYPE_TRAILER = "Trailer";
     private static final String SELECTED_MOVIE_KEY = "selected_movie";
@@ -79,8 +81,10 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.button_share_trailer)
     ImageButton mShareTrailerButton;
 
+    @Inject
+    MovieDao mMovieDao;
+
     private MoviesService mMoviesService;
-    private MoviesDatabase mMoviesDatabase;
     private Movie mMovie;
     private List<Video> mTrailers;
     private VideoAdapter mVideoAdapter;
@@ -106,7 +110,6 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         mMoviesService = new MoviesService();
-        mMoviesDatabase = MoviesDatabase.getInstance(getApplicationContext());
 
         setupFetchVideosDataListener();
         setupTrailersRecyclerView();
@@ -260,7 +263,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setupFavoritesButton() {
-        LiveData<Movie> movie = mMoviesDatabase.movieDao().getMovie(mMovie.getId());
+        LiveData<Movie> movie = mMovieDao.getMovie(mMovie.getId());
         movie.observe(this, new Observer<Movie>() {
             @Override
             public void onChanged(@Nullable Movie changedMovie) {
@@ -282,7 +285,7 @@ public class DetailActivity extends AppCompatActivity {
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        mMoviesDatabase.movieDao().insertMovie(mMovie);
+                        mMovieDao.insertMovie(mMovie);
                     }
                 });
             }
@@ -298,7 +301,7 @@ public class DetailActivity extends AppCompatActivity {
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
                     @Override
                     public void run() {
-                        mMoviesDatabase.movieDao().deleteMovie(mMovie);
+                        mMovieDao.deleteMovie(mMovie);
                     }
                 });
             }
