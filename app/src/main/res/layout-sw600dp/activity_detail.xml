@@ -23,7 +23,7 @@
         tools:context="com.jbielak.popularmovies.DetailActivity">
 
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="0.20">
@@ -92,16 +92,16 @@
                     android:textColor="@android:color/white" />
             </LinearLayout>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view_movie_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.80"
             android:fillViewport="true">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -138,7 +138,7 @@
                         android:text="@string/trailers_list_label"
                         android:textSize="@dimen/trailers_list_title_text_size" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_trailers"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -162,7 +162,7 @@
                         android:text="@string/reviews_list_label"
                         android:textSize="@dimen/reviews_list_title_text_size" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_view_reviews"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -171,7 +171,7 @@
 
                 </RelativeLayout>
 
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v4.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 </LinearLayout>

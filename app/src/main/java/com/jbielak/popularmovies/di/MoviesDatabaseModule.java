@@ -1,7 +1,6 @@
 package com.jbielak.popularmovies.di;
 
-import android.app.Application;
-import android.arch.persistence.room.Room;
+import androidx.room.Room;
 import android.content.Context;
 import com.jbielak.popularmovies.database.MovieDao;
 import com.jbielak.popularmovies.database.MoviesDatabase;
