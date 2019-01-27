@@ -11,8 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.R;
-import com.jbielak.popularmovies.model.Video;
-import com.jbielak.popularmovies.network.NetworkUtils;
+import com.jbielak.popularmovies.data.model.Video;
+import com.jbielak.popularmovies.data.network.NetworkUtils;
 
 import java.util.List;
 

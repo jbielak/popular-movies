@@ -2,8 +2,8 @@ package com.jbielak.popularmovies.di;
 
 import androidx.room.Room;
 import android.content.Context;
-import com.jbielak.popularmovies.database.MovieDao;
-import com.jbielak.popularmovies.database.MoviesDatabase;
+import com.jbielak.popularmovies.data.database.MovieDao;
+import com.jbielak.popularmovies.data.database.MoviesDatabase;
 import javax.inject.Singleton;
 
 import dagger.Module;

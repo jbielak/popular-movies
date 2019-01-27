@@ -4,8 +4,8 @@ import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.jbielak.popularmovies.database.MoviesDatabase;
-import com.jbielak.popularmovies.model.Movie;
+import com.jbielak.popularmovies.data.database.MoviesDatabase;
+import com.jbielak.popularmovies.data.model.Movie;
 
 import org.junit.After;
 import org.junit.Before;

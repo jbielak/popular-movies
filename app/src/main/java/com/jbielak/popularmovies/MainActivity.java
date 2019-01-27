@@ -17,10 +17,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.adapter.MovieAdapter;
-import com.jbielak.popularmovies.database.MovieDao;
-import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.network.MoviesService;
-import com.jbielak.popularmovies.network.NetworkUtils;
+import com.jbielak.popularmovies.data.database.MovieDao;
+import com.jbielak.popularmovies.data.model.Movie;
+import com.jbielak.popularmovies.data.network.MoviesService;
+import com.jbielak.popularmovies.data.network.NetworkUtils;
 import com.jbielak.popularmovies.utilities.DisplayType;
 
 import java.util.List;

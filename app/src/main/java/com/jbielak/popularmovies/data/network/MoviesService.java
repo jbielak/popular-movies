@@ -1,14 +1,14 @@
-package com.jbielak.popularmovies.network;
+package com.jbielak.popularmovies.data.network;
 
 import android.util.Log;
 
 import com.jbielak.popularmovies.FetchDataListener;
-import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.model.MovieResponse;
-import com.jbielak.popularmovies.model.Review;
-import com.jbielak.popularmovies.model.ReviewResponse;
-import com.jbielak.popularmovies.model.Video;
-import com.jbielak.popularmovies.model.VideoResponse;
+import com.jbielak.popularmovies.data.model.Movie;
+import com.jbielak.popularmovies.data.model.MovieResponse;
+import com.jbielak.popularmovies.data.model.Review;
+import com.jbielak.popularmovies.data.model.ReviewResponse;
+import com.jbielak.popularmovies.data.model.Video;
+import com.jbielak.popularmovies.data.model.VideoResponse;
 import com.jbielak.popularmovies.utilities.DisplayType;
 
 import java.util.List;

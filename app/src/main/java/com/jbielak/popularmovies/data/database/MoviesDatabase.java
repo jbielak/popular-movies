@@ -1,10 +1,10 @@
-package com.jbielak.popularmovies.database;
+package com.jbielak.popularmovies.data.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.jbielak.popularmovies.model.Movie;
+import com.jbielak.popularmovies.data.model.Movie;
 
 @Database(entities = {Movie.class}, version = 1, exportSchema = false)
 @TypeConverters(DateConverter.class)

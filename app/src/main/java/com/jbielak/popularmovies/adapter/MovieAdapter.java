@@ -10,8 +10,8 @@ import android.widget.ImageView;
 
 import com.jbielak.popularmovies.DetailActivity;
 import com.jbielak.popularmovies.R;
-import com.jbielak.popularmovies.model.Movie;
-import com.jbielak.popularmovies.network.NetworkUtils;
+import com.jbielak.popularmovies.data.model.Movie;
+import com.jbielak.popularmovies.data.network.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

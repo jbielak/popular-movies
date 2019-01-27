@@ -11,7 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jbielak.popularmovies.R;
-import com.jbielak.popularmovies.model.Review;
+import com.jbielak.popularmovies.data.model.Review;
 
 import java.util.List;
 

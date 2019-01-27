@@ -2,9 +2,9 @@ package com.jbielak.popularmovies.di;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.jbielak.popularmovies.network.MoviesApiInterface;
-import com.jbielak.popularmovies.network.MoviesService;
-import com.jbielak.popularmovies.network.NetworkUtils;
+import com.jbielak.popularmovies.data.network.MoviesApiInterface;
+import com.jbielak.popularmovies.data.network.MoviesService;
+import com.jbielak.popularmovies.data.network.NetworkUtils;
 import com.jbielak.popularmovies.utilities.DateDeserializer;
 
 import java.util.Date;

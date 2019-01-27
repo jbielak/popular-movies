@@ -1,4 +1,4 @@
-package com.jbielak.popularmovies.database;
+package com.jbielak.popularmovies.data.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,7 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.jbielak.popularmovies.model.Movie;
+import com.jbielak.popularmovies.data.model.Movie;
 
 import java.util.List;
 

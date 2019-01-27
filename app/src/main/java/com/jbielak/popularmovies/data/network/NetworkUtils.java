@@ -1,4 +1,4 @@
-package com.jbielak.popularmovies.network;
+package com.jbielak.popularmovies.data.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

@@ -1,8 +1,8 @@
-package com.jbielak.popularmovies.network;
+package com.jbielak.popularmovies.data.network;
 
-import com.jbielak.popularmovies.model.MovieResponse;
-import com.jbielak.popularmovies.model.ReviewResponse;
-import com.jbielak.popularmovies.model.VideoResponse;
+import com.jbielak.popularmovies.data.model.MovieResponse;
+import com.jbielak.popularmovies.data.model.ReviewResponse;
+import com.jbielak.popularmovies.data.model.VideoResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

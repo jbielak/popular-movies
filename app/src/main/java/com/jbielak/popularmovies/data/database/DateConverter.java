@@ -1,4 +1,4 @@
-package com.jbielak.popularmovies.database;
+package com.jbielak.popularmovies.data.database;
 
 import androidx.room.TypeConverter;
 

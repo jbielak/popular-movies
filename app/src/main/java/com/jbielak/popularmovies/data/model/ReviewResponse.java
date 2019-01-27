@@ -1,4 +1,4 @@
-package com.jbielak.popularmovies.model;
+package com.jbielak.popularmovies.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
